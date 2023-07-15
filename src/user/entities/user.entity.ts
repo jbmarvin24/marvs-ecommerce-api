@@ -8,6 +8,10 @@ import {
 
 @Entity()
 export class User {
+  constructor(partial?: Partial<User>) {
+    Object.assign(this, partial);
+  }
+
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -24,7 +28,7 @@ export class User {
   lastName: string;
 
   @Column({ nullable: true, length: 100 })
-  middleName: string;
+  middleName?: string;
 
   @Column({ length: 500 })
   address: string;
