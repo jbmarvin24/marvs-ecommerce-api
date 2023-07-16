@@ -8,6 +8,8 @@ import { RoleModule } from './role/role.module';
 import { Role } from './role/entities/role.entity';
 import { ShopModule } from './shop/shop.module';
 import { Shop } from './shop/entities/shop.entity';
+import { CategoryModule } from './category/category.module';
+import { Category } from './category/entities/category.entity';
 
 @Module({
   imports: [
@@ -18,13 +20,14 @@ import { Shop } from './shop/entities/shop.entity';
       username: 'postgres',
       password: 'batman@dev',
       database: 'marvs_ecommerce',
-      entities: [User, Role, Shop],
+      entities: [User, Role, Shop, Category],
       synchronize: true,
       // dropSchema: true,
     }),
     UserModule,
     RoleModule,
     ShopModule,
+    CategoryModule,
   ],
   controllers: [AppController],
   providers: [AppService],
