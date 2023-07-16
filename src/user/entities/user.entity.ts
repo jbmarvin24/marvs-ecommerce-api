@@ -3,10 +3,12 @@ import {
   CreateDateColumn,
   Entity,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { Role } from '../../role/entities/role.entity';
+import { Shop } from '../../shop/entities/shop.entity';
 
 @Entity()
 export class User {
@@ -43,6 +45,9 @@ export class User {
 
   @ManyToOne(() => Role, (role) => role.users, { nullable: false })
   role: Role;
+
+  @OneToMany(() => Shop, (shop) => shop.user)
+  shops: Shop[];
 
   @CreateDateColumn()
   createdAt: Date;
