@@ -1,7 +1,19 @@
-import { IsEmail, IsNotEmpty, Length, MaxLength } from 'class-validator';
-import { IsNull } from 'typeorm';
+import {
+  IsEmail,
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  Length,
+  MaxLength,
+  Min,
+} from 'class-validator';
 
 export class CreateUserDto {
+  @Min(0)
+  @IsNumber()
+  @IsNotEmpty()
+  roleId: number;
+
   @IsEmail()
   email: string;
 
@@ -9,18 +21,23 @@ export class CreateUserDto {
   @Length(6, 100)
   password: string;
 
-  @Length(1, 100)
+  @IsNotEmpty()
+  @MaxLength(100)
   firstName: string;
 
-  @Length(1, 100)
+  @IsNotEmpty()
+  @MaxLength(100)
   lastName: string;
 
+  @IsOptional()
   @MaxLength(500)
   middleName?: string;
 
-  @Length(1, 500)
+  @IsNotEmpty()
+  @MaxLength(500)
   address: string;
 
-  @Length(1, 100)
+  @IsNotEmpty()
+  @MaxLength(100)
   phoneNo: string;
 }

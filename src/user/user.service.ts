@@ -14,6 +14,7 @@ export class UserService {
 
   async create(createUserDto: CreateUserDto): Promise<User> {
     // TODO: hash Password
+    // TODO: validate role foreign key constraint
     const user = new User(createUserDto);
 
     return await this.userRepository.save(user);
