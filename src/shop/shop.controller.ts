@@ -6,13 +6,11 @@ import {
   Patch,
   Param,
   Delete,
-  NotFoundException,
   ParseIntPipe,
 } from '@nestjs/common';
 import { ShopService } from './shop.service';
 import { CreateShopDto } from './dto/create-shop.dto';
 import { UpdateShopDto } from './dto/update-shop.dto';
-import { Shop } from './entities/shop.entity';
 
 @Controller('shop')
 export class ShopController {
@@ -32,9 +30,7 @@ export class ShopController {
 
   @Get(':id')
   async findOne(@Param('id', ParseIntPipe) id: number) {
-    const shop = await this.checkIfExists(id);
-
-    return shop;
+    return await this.shopService.findOne(id);
   }
 
   @Patch(':id')
@@ -42,22 +38,11 @@ export class ShopController {
     @Param('id', ParseIntPipe) id: number,
     @Body() updateShopDto: UpdateShopDto,
   ) {
-    const shop = await this.checkIfExists(id);
-
-    return this.shopService.update(shop, updateShopDto);
+    return this.shopService.update(id, updateShopDto);
   }
 
   @Delete(':id')
   async remove(@Param('id', ParseIntPipe) id: number) {
-    const shop = await this.checkIfExists(id);
-    return await this.shopService.remove(shop);
-  }
-
-  private async checkIfExists(id: number): Promise<Shop> {
-    const shop = await this.shopService.findOne(id);
-
-    if (!shop) throw new NotFoundException();
-
-    return shop;
+    return await this.shopService.remove(id);
   }
 }

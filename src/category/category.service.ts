@@ -21,18 +21,20 @@ export class CategoryService {
     return await this.categoryRepository.find();
   }
 
-  async findOne(id: number): Promise<Category | null> {
-    return await this.categoryRepository.findOne({
-      where: {
-        id,
-      },
+  async findOne(id: number): Promise<Category> {
+    return await this.categoryRepository.findOneOrFail({
+      where: { id },
     });
   }
 
   async update(
-    category: Category,
+    id: number,
     updateCategoryDto: UpdateCategoryDto,
   ): Promise<Category> {
+    const category = await this.categoryRepository.findOneOrFail({
+      where: { id },
+    });
+
     return await this.categoryRepository.save(
       new Category({
         ...category,
@@ -41,7 +43,11 @@ export class CategoryService {
     );
   }
 
-  async remove(category: Category): Promise<Category> {
+  async remove(id: number): Promise<Category> {
+    const category = await this.categoryRepository.findOneOrFail({
+      where: { id },
+    });
+
     return this.categoryRepository.remove(category);
   }
 }

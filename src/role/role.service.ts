@@ -21,15 +21,21 @@ export class RoleService {
     return await this.roleRepository.find();
   }
 
-  async findOne(id: number): Promise<Role | null> {
-    return await this.roleRepository.findOne({
+  async findOne(id: number): Promise<Role> {
+    return await this.roleRepository.findOneOrFail({
       where: {
         id,
       },
     });
   }
 
-  async update(role: Role, updateRoleDto: UpdateRoleDto): Promise<Role> {
+  async update(id: number, updateRoleDto: UpdateRoleDto): Promise<Role> {
+    const role = await this.roleRepository.findOneOrFail({
+      where: {
+        id,
+      },
+    });
+
     return await this.roleRepository.save(
       new Role({
         ...role,
@@ -38,7 +44,13 @@ export class RoleService {
     );
   }
 
-  async remove(role: Role): Promise<Role> {
+  async remove(id: number): Promise<Role> {
+    const role = await this.roleRepository.findOneOrFail({
+      where: {
+        id,
+      },
+    });
+
     return await this.roleRepository.remove(role);
   }
 }

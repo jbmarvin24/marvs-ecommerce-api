@@ -24,8 +24,8 @@ export class VoucherTypeService {
     return await this.voucherTypeRepository.find();
   }
 
-  async findOne(id: number): Promise<VoucherType | null> {
-    return await this.voucherTypeRepository.findOne({
+  async findOne(id: number): Promise<VoucherType> {
+    return await this.voucherTypeRepository.findOneOrFail({
       where: {
         id,
       },
@@ -33,9 +33,15 @@ export class VoucherTypeService {
   }
 
   async update(
-    voucherType: VoucherType,
+    id: number,
     updateVoucherTypeDto: UpdateVoucherTypeDto,
   ): Promise<VoucherType> {
+    const voucherType = await this.voucherTypeRepository.findOneOrFail({
+      where: {
+        id,
+      },
+    });
+
     return await this.voucherTypeRepository.save(
       new VoucherType({
         ...voucherType,
@@ -44,7 +50,13 @@ export class VoucherTypeService {
     );
   }
 
-  async remove(voucherType: VoucherType): Promise<VoucherType> {
+  async remove(id: number): Promise<VoucherType> {
+    const voucherType = await this.voucherTypeRepository.findOneOrFail({
+      where: {
+        id,
+      },
+    });
+
     return await this.voucherTypeRepository.remove(voucherType);
   }
 }

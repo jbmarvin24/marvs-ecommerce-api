@@ -26,21 +26,33 @@ export class UserService {
     return await this.userRepository.find();
   }
 
-  async findOne(id: number): Promise<User | null> {
-    return await this.userRepository.findOne({
+  async findOne(id: number): Promise<User> {
+    return await this.userRepository.findOneOrFail({
       where: {
         id,
       },
     });
   }
 
-  async update(user: User, updateUserDto: UpdateUserDto): Promise<User> {
+  async update(id: number, updateUserDto: UpdateUserDto): Promise<User> {
+    const user = await this.userRepository.findOneOrFail({
+      where: {
+        id,
+      },
+    });
+
     return await this.userRepository.save(
       new User({ ...user, ...updateUserDto }),
     );
   }
 
-  async remove(user: User): Promise<User> {
+  async remove(id: number): Promise<User> {
+    const user = await this.userRepository.findOneOrFail({
+      where: {
+        id,
+      },
+    });
+
     return await this.userRepository.remove(user);
   }
 }

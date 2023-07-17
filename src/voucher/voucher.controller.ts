@@ -7,12 +7,10 @@ import {
   Param,
   Delete,
   ParseIntPipe,
-  NotFoundException,
 } from '@nestjs/common';
 import { VoucherService } from './voucher.service';
 import { CreateVoucherDto } from './dto/create-voucher.dto';
 import { UpdateVoucherDto } from './dto/update-voucher.dto';
-import { Voucher } from './entities/voucher.entity';
 
 @Controller('voucher')
 export class VoucherController {
@@ -30,7 +28,7 @@ export class VoucherController {
 
   @Get(':id')
   async findOne(@Param('id', ParseIntPipe) id: number) {
-    return await this.checkIfExists(id);
+    return await this.voucherService.findOne(id);
   }
 
   @Patch(':id')
@@ -38,23 +36,11 @@ export class VoucherController {
     @Param('id', ParseIntPipe) id: number,
     @Body() updateVoucherDto: UpdateVoucherDto,
   ) {
-    const voucher = await this.checkIfExists(id);
-
-    return await this.voucherService.update(voucher, updateVoucherDto);
+    return await this.voucherService.update(id, updateVoucherDto);
   }
 
   @Delete(':id')
   async remove(@Param('id', ParseIntPipe) id: number) {
-    const voucher = await this.checkIfExists(id);
-
-    return this.voucherService.remove(voucher);
-  }
-
-  private async checkIfExists(id: number): Promise<Voucher> {
-    const voucher = await this.voucherService.findOne(id);
-
-    if (!voucher) throw new NotFoundException();
-
-    return voucher;
+    return await this.voucherService.remove(id);
   }
 }

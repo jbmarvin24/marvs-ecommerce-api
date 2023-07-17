@@ -6,13 +6,11 @@ import {
   Patch,
   Param,
   Delete,
-  NotFoundException,
   ParseIntPipe,
 } from '@nestjs/common';
 import { CategoryService } from './category.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
-import { Category } from './entities/category.entity';
 
 @Controller('category')
 export class CategoryController {
@@ -31,7 +29,7 @@ export class CategoryController {
 
   @Get(':id')
   async findOne(@Param('id', ParseIntPipe) id: number) {
-    return await this.checkIfExists(id);
+    return await this.categoryService.findOne(id);
   }
 
   @Patch(':id')
@@ -39,23 +37,11 @@ export class CategoryController {
     @Param('id', ParseIntPipe) id: number,
     @Body() updateCategoryDto: UpdateCategoryDto,
   ) {
-    const category = await this.checkIfExists(id);
-
-    return await this.categoryService.update(category, updateCategoryDto);
+    return await this.categoryService.update(id, updateCategoryDto);
   }
 
   @Delete(':id')
   async remove(@Param('id', ParseIntPipe) id: number) {
-    const category = await this.checkIfExists(id);
-
-    return await this.categoryService.remove(category);
-  }
-
-  private async checkIfExists(id: number): Promise<Category> {
-    const category = await this.categoryService.findOne(id);
-
-    if (!category) throw new NotFoundException();
-
-    return category;
+    return await this.categoryService.remove(id);
   }
 }

@@ -30,7 +30,7 @@ export class VoucherTypeController {
 
   @Get(':id')
   async findOne(@Param('id', ParseIntPipe) id: number) {
-    return await this.checkIfExists(id);
+    return await this.voucherTypeService.findOne(id);
   }
 
   @Patch(':id')
@@ -38,22 +38,11 @@ export class VoucherTypeController {
     @Param('id', ParseIntPipe) id: number,
     @Body() updateVoucherTypeDto: UpdateVoucherTypeDto,
   ) {
-    const voucherType = await this.checkIfExists(id);
-    return this.voucherTypeService.update(voucherType, updateVoucherTypeDto);
+    return this.voucherTypeService.update(id, updateVoucherTypeDto);
   }
 
   @Delete(':id')
   async remove(@Param('id', ParseIntPipe) id: number) {
-    const voucherType = await this.checkIfExists(id);
-
-    return this.voucherTypeService.remove(voucherType);
-  }
-
-  private async checkIfExists(id: number): Promise<VoucherType> {
-    const voucherType = await this.voucherTypeService.findOne(id);
-
-    if (!voucherType) throw new NotFoundException();
-
-    return voucherType;
+    return this.voucherTypeService.remove(id);
   }
 }

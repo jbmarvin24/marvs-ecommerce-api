@@ -21,15 +21,21 @@ export class ShopService {
     return await this.shopRepository.find();
   }
 
-  async findOne(id: number): Promise<Shop | null> {
-    return await this.shopRepository.findOne({
+  async findOne(id: number): Promise<Shop> {
+    return await this.shopRepository.findOneOrFail({
       where: {
         id,
       },
     });
   }
 
-  async update(shop: Shop, updateShopDto: UpdateShopDto): Promise<Shop> {
+  async update(id: number, updateShopDto: UpdateShopDto): Promise<Shop> {
+    const shop = await this.shopRepository.findOneOrFail({
+      where: {
+        id,
+      },
+    });
+
     return await this.shopRepository.save(
       new Shop({
         ...shop,
@@ -38,7 +44,12 @@ export class ShopService {
     );
   }
 
-  async remove(shop: Shop): Promise<Shop> {
+  async remove(id: number): Promise<Shop> {
+    const shop = await this.shopRepository.findOneOrFail({
+      where: {
+        id,
+      },
+    });
     return await this.shopRepository.remove(shop);
   }
 }

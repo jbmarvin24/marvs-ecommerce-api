@@ -20,14 +20,17 @@ export class VoucherService {
     return await this.voucherRepository.find();
   }
 
-  async findOne(id: number): Promise<Voucher | null> {
-    return await this.voucherRepository.findOne({ where: { id } });
+  async findOne(id: number): Promise<Voucher> {
+    return await this.voucherRepository.findOneOrFail({ where: { id } });
   }
 
   async update(
-    voucher: Voucher,
+    id: number,
     updateVoucherDto: UpdateVoucherDto,
   ): Promise<Voucher> {
+    const voucher = await this.voucherRepository.findOneOrFail({
+      where: { id },
+    });
     return await this.voucherRepository.save(
       new Voucher({
         ...voucher,
@@ -36,7 +39,11 @@ export class VoucherService {
     );
   }
 
-  async remove(voucher: Voucher): Promise<Voucher> {
+  async remove(id: number): Promise<Voucher> {
+    const voucher = await this.voucherRepository.findOneOrFail({
+      where: { id },
+    });
+
     return this.voucherRepository.remove(voucher);
   }
 }
