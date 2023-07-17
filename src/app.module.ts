@@ -12,6 +12,8 @@ import { CategoryModule } from './category/category.module';
 import { Category } from './category/entities/category.entity';
 import { VoucherTypeModule } from './voucher-type/voucher-type.module';
 import { VoucherType } from './voucher-type/entities/voucher-type.entity';
+import { VoucherModule } from './voucher/voucher.module';
+import { Voucher } from './voucher/entities/voucher.entity';
 
 @Module({
   imports: [
@@ -22,7 +24,7 @@ import { VoucherType } from './voucher-type/entities/voucher-type.entity';
       username: 'postgres',
       password: 'batman@dev',
       database: 'marvs_ecommerce',
-      entities: [User, Role, Shop, Category, VoucherType],
+      entities: [User, Role, Shop, Category, VoucherType, Voucher],
       synchronize: true,
       // dropSchema: true,
     }),
@@ -31,6 +33,7 @@ import { VoucherType } from './voucher-type/entities/voucher-type.entity';
     ShopModule,
     CategoryModule,
     VoucherTypeModule,
+    VoucherModule,
   ],
   controllers: [AppController],
   providers: [AppService],
