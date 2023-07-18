@@ -2,13 +2,15 @@ import {
   Column,
   CreateDateColumn,
   Entity,
-  ManyToOne,
-  OneToMany,
   PrimaryGeneratedColumn,
+  Tree,
+  TreeChildren,
+  TreeParent,
   UpdateDateColumn,
 } from 'typeorm';
 
 @Entity()
+@Tree('closure-table')
 export class Category {
   constructor(partial?: Partial<Category>) {
     Object.assign(this, partial);
@@ -23,11 +25,11 @@ export class Category {
   @Column({ nullable: true })
   parentId: number;
 
-  @ManyToOne(() => Category, (category) => category.children)
-  parent: Category;
-
-  @OneToMany(() => Category, (category) => category.parent)
+  @TreeChildren()
   children: Category[];
+
+  @TreeParent()
+  parent: Category;
 
   @Column({ length: 500, nullable: true })
   description: string;
