@@ -11,7 +11,7 @@ export class CreateCategoryDto {
   @IsNotEmpty()
   name: string;
 
-  @Min(0)
+  @Min(1)
   @IsNumber()
   @IsOptional()
   parentId: number;
