@@ -1,24 +1,23 @@
 import {
   IsEmail,
   IsNotEmpty,
-  IsNumber,
-  IsOptional,
   IsStrongPassword,
   MaxLength,
-  Min,
+  IsOptional,
 } from 'class-validator';
 
-export class CreateUserDto {
-  @Min(1)
-  @IsNumber()
-  @IsNotEmpty()
-  roleId: number;
-
+export class RegisterDto {
   @IsEmail()
   email: string;
 
   @IsNotEmpty()
-  @IsStrongPassword()
+  @IsStrongPassword(
+    { minLength: 6 },
+    {
+      message:
+        'Password must be at least 6 characters and contains lower and uppuer case letters, numbers and symbols.',
+    },
+  )
   password: string;
 
   @IsNotEmpty()

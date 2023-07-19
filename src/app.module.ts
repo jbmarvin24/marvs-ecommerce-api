@@ -14,6 +14,7 @@ import { VoucherTypeModule } from './voucher-type/voucher-type.module';
 import { VoucherType } from './voucher-type/entities/voucher-type.entity';
 import { VoucherModule } from './voucher/voucher.module';
 import { Voucher } from './voucher/entities/voucher.entity';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { Voucher } from './voucher/entities/voucher.entity';
       synchronize: true,
       // dropSchema: true,
     }),
+    AuthModule,
     UserModule,
     RoleModule,
     ShopModule,
