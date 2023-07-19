@@ -8,6 +8,7 @@ import {
 
 export class RegisterDto {
   @IsEmail()
+  // TODO: Create email validation if has exist
   email: string;
 
   @IsNotEmpty()
