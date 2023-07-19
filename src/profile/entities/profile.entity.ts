@@ -2,6 +2,7 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
   OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
@@ -21,6 +22,7 @@ export class Profile {
   userId: number;
 
   @OneToOne(() => User, (user) => user.profile)
+  @JoinColumn()
   user: User;
 
   @Column({ length: 100 })
