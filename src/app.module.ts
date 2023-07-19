@@ -27,7 +27,7 @@ import { Profile } from './profile/entities/profile.entity';
       database: 'marvs_ecommerce',
       entities: [User, Profile, Shop, Category, VoucherType, Voucher],
       synchronize: true,
-      // dropSchema: true,
+      dropSchema: true,
     }),
     AuthModule,
     UserModule,
