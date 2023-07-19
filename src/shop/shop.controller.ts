@@ -11,15 +11,16 @@ import {
 import { ShopService } from './shop.service';
 import { CreateShopDto } from './dto/create-shop.dto';
 import { UpdateShopDto } from './dto/update-shop.dto';
+import { CurrentUser } from '../user/decorators/current-user.decorator';
+import { User } from '../user/entities/user.entity';
 
 @Controller('shop')
 export class ShopController {
   constructor(private readonly shopService: ShopService) {}
 
   @Post()
-  create(@Body() createShopDto: CreateShopDto) {
-    // TODO: Get the user from the current user
-    return this.shopService.create(createShopDto);
+  create(@Body() createShopDto: CreateShopDto, @CurrentUser() user: User) {
+    return this.shopService.create(user.id, createShopDto);
   }
 
   @Get()

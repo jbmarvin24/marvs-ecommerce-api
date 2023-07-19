@@ -12,8 +12,10 @@ export class ShopService {
     private readonly shopRepository: Repository<Shop>,
   ) {}
 
-  async create(createShopDto: CreateShopDto): Promise<Shop> {
-    return await this.shopRepository.save(new Shop(createShopDto));
+  async create(userId: number, createShopDto: CreateShopDto): Promise<Shop> {
+    return await this.shopRepository.save(
+      new Shop({ ...createShopDto, userId }),
+    );
   }
 
   async findAll(): Promise<Shop[]> {
