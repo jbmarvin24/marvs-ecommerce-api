@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
@@ -12,11 +11,7 @@ export class UserService {
     private readonly userRepository: Repository<User>,
   ) {}
 
-  async create(createUserDto: CreateUserDto): Promise<User> {
-    // TODO: hash Password
-    // TODO: validate role foreign key constraint
-    const user = new User(createUserDto);
-
+  async create(user: User): Promise<User> {
     return await this.userRepository.save(user);
   }
 

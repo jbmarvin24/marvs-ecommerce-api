@@ -2,6 +2,8 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { UserService } from '../user/user.service';
 import { JwtService } from '@nestjs/jwt';
 import { CreateUserDto } from '../user/dto/create-user.dto';
+import { User } from '../user/entities/user.entity';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class AuthService {
@@ -13,9 +15,11 @@ export class AuthService {
   async login(email: string, password: string): Promise<any> {
     const user = await this.userService.findOneByEmail(email);
 
-    if (user?.password !== password) {
-      throw new UnauthorizedException();
-    }
+    if (!user) throw new UnauthorizedException('Invalid email or password.');
+
+    const isMatch = await bcrypt.compare(password, user.password);
+
+    if (!isMatch) throw new UnauthorizedException('Invalid email or password.');
 
     const payload = { sub: user.id, email: user.email };
 
@@ -25,6 +29,10 @@ export class AuthService {
   }
 
   async register(registerUserDto: CreateUserDto) {
-    return await this.userService.create(registerUserDto);
+    const newUser = new User(registerUserDto);
+    const hash = await bcrypt.hash(registerUserDto.password, 10);
+    newUser.password = hash;
+
+    return await this.userService.create(newUser);
   }
 }
