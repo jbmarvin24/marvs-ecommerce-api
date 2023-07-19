@@ -4,8 +4,6 @@ import { AppService } from './app.service';
 import { UserModule } from './user/user.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './user/entities/user.entity';
-import { RoleModule } from './role/role.module';
-import { Role } from './role/entities/role.entity';
 import { ShopModule } from './shop/shop.module';
 import { Shop } from './shop/entities/shop.entity';
 import { CategoryModule } from './category/category.module';
@@ -25,13 +23,12 @@ import { AuthModule } from './auth/auth.module';
       username: 'postgres',
       password: 'batman@dev',
       database: 'marvs_ecommerce',
-      entities: [User, Role, Shop, Category, VoucherType, Voucher],
+      entities: [User, Shop, Category, VoucherType, Voucher],
       synchronize: true,
       // dropSchema: true,
     }),
     AuthModule,
     UserModule,
-    RoleModule,
     ShopModule,
     CategoryModule,
     VoucherTypeModule,

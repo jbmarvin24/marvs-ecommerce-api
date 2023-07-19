@@ -2,12 +2,10 @@ import {
   Column,
   CreateDateColumn,
   Entity,
-  ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { Role } from '../../role/entities/role.entity';
 import { Shop } from '../../shop/entities/shop.entity';
 
 @Entity()
@@ -39,12 +37,6 @@ export class User {
 
   @Column({ length: 100 })
   phoneNo: string;
-
-  @Column()
-  roleId: number;
-
-  @ManyToOne(() => Role, (role) => role.users, { nullable: false })
-  role: Role;
 
   @OneToMany(() => Shop, (shop) => shop.user)
   shops: Shop[];

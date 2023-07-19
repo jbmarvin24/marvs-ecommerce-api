@@ -9,11 +9,6 @@ import {
 } from 'class-validator';
 
 export class CreateUserDto {
-  @Min(1)
-  @IsNumber()
-  @IsNotEmpty()
-  roleId: number;
-
   @IsEmail()
   email: string;
 

@@ -20,8 +20,6 @@ export class AuthContoller {
   async register(@Body() registerDto: RegisterDto) {
     return await this.authService.register({
       ...registerDto,
-      // TODO: Create Enum
-      roleId: 2,
     });
   }
 }
