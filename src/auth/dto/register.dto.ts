@@ -35,7 +35,7 @@ export class RegisterDto {
 
   @IsNotEmpty()
   @MaxLength(500)
-  address: string;
+  shippingAddress: string;
 
   @IsNotEmpty()
   @MaxLength(100)
