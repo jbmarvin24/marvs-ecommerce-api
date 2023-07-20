@@ -1,15 +1,18 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Profile } from '../profile/entities/profile.entity';
+import { Shop } from '../shop/entities/shop.entity';
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
+    @InjectRepository(Shop)
+    private readonly shopRepository: Repository<Shop>,
   ) {}
 
   async create(user: User, profile: Profile): Promise<User> {
@@ -70,5 +73,20 @@ export class UserService {
     });
 
     return await this.userRepository.remove(user);
+  }
+
+  /** Validates the shop ownership of the current logged in user.
+   * @param {number} currentUserId The current logged in user.
+   * @param {number} shopId The Shop Id
+   * @returns {boolean} Return true if the current user is owned the shop else false.
+   */
+  async validateShopOwner(currentUserId: number, shopId: number) {
+    const shop = await this.shopRepository.findOneBy({
+      id: shopId,
+    });
+
+    if (!shop) throw new NotFoundException('Shop not found.');
+
+    return shop.userId === currentUserId;
   }
 }

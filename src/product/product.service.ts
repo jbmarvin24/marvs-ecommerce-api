@@ -1,22 +1,34 @@
-import { Injectable } from '@nestjs/common';
+import { ForbiddenException, Injectable } from '@nestjs/common';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { Repository } from 'typeorm';
 import { Product } from './entities/product.entity';
 import { InjectRepository } from '@nestjs/typeorm';
+import { UserService } from '../user/user.service';
 
 @Injectable()
 export class ProductService {
   constructor(
     @InjectRepository(Product)
     private readonly productRepository: Repository<Product>,
+    private userService: UserService,
   ) {}
-  async create(createProductDto: CreateProductDto) {
-    return await this.productRepository.save(new Product(createProductDto));
+  async create(
+    userId: number,
+    shopId: number,
+    createProductDto: CreateProductDto,
+  ) {
+    await this.validateShopOwnership(userId, shopId);
+
+    return await this.productRepository.save(
+      new Product({ ...createProductDto, shopId }),
+    );
   }
 
-  async findAll() {
-    return await this.productRepository.find();
+  async findAllByShopId(shopId: number) {
+    return await this.productRepository.findBy({
+      shopId,
+    });
   }
 
   async findOne(id: number) {
@@ -25,7 +37,14 @@ export class ProductService {
     });
   }
 
-  async update(id: number, updateProductDto: UpdateProductDto) {
+  async update(
+    id: number,
+    userId: number,
+    shopId: number,
+    updateProductDto: UpdateProductDto,
+  ) {
+    await this.validateShopOwnership(userId, shopId);
+
     const product = await this.productRepository.findOneByOrFail({
       id,
     });
@@ -38,11 +57,21 @@ export class ProductService {
     );
   }
 
-  async remove(id: number) {
+  async remove(id: number, userId: number, shopId: number) {
+    await this.validateShopOwnership(userId, shopId);
+
     const product = await this.productRepository.findOneByOrFail({
       id,
     });
 
     return await this.productRepository.remove(product);
+  }
+
+  private async validateShopOwnership(currentUser: number, shopId: number) {
+    const isOwner = await this.userService.validateShopOwner(
+      currentUser,
+      shopId,
+    );
+    if (!isOwner) throw new ForbiddenException('Invalid shop owner');
   }
 }
