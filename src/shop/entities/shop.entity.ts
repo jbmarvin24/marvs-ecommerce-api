@@ -3,10 +3,12 @@ import {
   CreateDateColumn,
   Entity,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { User } from '../../user/entities/user.entity';
+import { Product } from '../../product/entities/product.entity';
 
 @Entity()
 export class Shop {
@@ -43,6 +45,9 @@ export class Shop {
 
   @Column({ length: 50 })
   phoneNo: string;
+
+  @OneToMany(() => Product, (product) => product.shop)
+  products: Product[];
 
   @CreateDateColumn()
   createdAt: Date;

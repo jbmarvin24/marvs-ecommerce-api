@@ -15,6 +15,8 @@ import { Voucher } from './voucher/entities/voucher.entity';
 import { AuthModule } from './auth/auth.module';
 import { ProfileModule } from './profile/profile.module';
 import { Profile } from './profile/entities/profile.entity';
+import { ProductModule } from './product/product.module';
+import { Product } from './product/entities/product.entity';
 
 @Module({
   imports: [
@@ -25,9 +27,9 @@ import { Profile } from './profile/entities/profile.entity';
       username: 'postgres',
       password: 'batman@dev',
       database: 'marvs_ecommerce',
-      entities: [User, Profile, Shop, Category, VoucherType, Voucher],
+      entities: [User, Profile, Shop, Category, VoucherType, Voucher, Product],
       synchronize: true,
-      dropSchema: true,
+      // dropSchema: true,
     }),
     AuthModule,
     UserModule,
@@ -36,6 +38,7 @@ import { Profile } from './profile/entities/profile.entity';
     VoucherTypeModule,
     VoucherModule,
     ProfileModule,
+    ProductModule,
   ],
   controllers: [AppController],
   providers: [AppService],

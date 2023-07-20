@@ -2,12 +2,14 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
   Tree,
   TreeChildren,
   TreeParent,
   UpdateDateColumn,
 } from 'typeorm';
+import { Product } from '../../product/entities/product.entity';
 
 @Entity()
 @Tree('closure-table')
@@ -33,6 +35,9 @@ export class Category {
 
   @Column({ length: 500, nullable: true })
   description: string;
+
+  @OneToMany(() => Product, (product) => product.category)
+  products: Product[];
 
   @CreateDateColumn()
   createdAt: Date;
