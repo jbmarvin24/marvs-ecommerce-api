@@ -9,10 +9,17 @@ import {
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { CurrentUser } from './decorators/current-user.decorator';
+import { User } from './entities/user.entity';
 
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
+
+  @Get('me')
+  async me(@CurrentUser() user: User) {
+    return user;
+  }
 
   @Get()
   async findAll() {
