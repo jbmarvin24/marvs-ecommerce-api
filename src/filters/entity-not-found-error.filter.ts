@@ -17,7 +17,7 @@ export class EntityNotFoundErrorFilter implements ExceptionFilter {
 
     response.status(status).json({
       statusCode: status,
-      message: 'Entit not found.',
+      message: 'Entity not found.',
       hint: 'Please find the valid entity.',
       timestamp: new Date().toISOString(),
       path: request.url,
