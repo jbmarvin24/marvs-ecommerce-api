@@ -5,10 +5,11 @@ import {
   MaxLength,
   IsOptional,
 } from 'class-validator';
+import { UserEmailNotExist } from '../validations/user-email-not-exist.constraint';
 
 export class RegisterDto {
+  @UserEmailNotExist()
   @IsEmail()
-  // TODO: Create email validation if has exist
   email: string;
 
   @IsNotEmpty()

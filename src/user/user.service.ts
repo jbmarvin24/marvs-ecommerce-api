@@ -89,4 +89,17 @@ export class UserService {
 
     return shop.userId === currentUserId;
   }
+
+  /**
+   * Validate the existence of a email.
+   * @param email
+   * @returns True if the email exist.
+   */
+  async IsEmailExist(email: string) {
+    const user = await this.userRepository.findOneBy({
+      email,
+    });
+
+    return Boolean(user);
+  }
 }

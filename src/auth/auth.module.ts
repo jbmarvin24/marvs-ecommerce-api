@@ -5,6 +5,7 @@ import { AuthContoller } from './auth.controller';
 import { JwtModule } from '@nestjs/jwt';
 import { APP_GUARD } from '@nestjs/core';
 import { AuthGuard } from './guards/auth.guard';
+import { UserEmailNotExistConstraint } from './validations/user-email-not-exist.constraint';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { AuthGuard } from './guards/auth.guard';
       provide: APP_GUARD,
       useClass: AuthGuard,
     },
+    UserEmailNotExistConstraint,
   ],
   controllers: [AuthContoller],
 })
