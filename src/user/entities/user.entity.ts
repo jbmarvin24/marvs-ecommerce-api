@@ -9,6 +9,7 @@ import {
 } from 'typeorm';
 import { Shop } from '../../shop/entities/shop.entity';
 import { Profile } from '../../profile/entities/profile.entity';
+import { Wishlist } from '../../wishlist/entities/wishlist.entity';
 
 @Entity()
 export class User {
@@ -33,6 +34,9 @@ export class User {
 
   @OneToMany(() => Shop, (shop) => shop.user)
   shops: Shop[];
+
+  @OneToMany(() => Wishlist, (wishlist) => wishlist.users)
+  wishlist: Wishlist[];
 
   @CreateDateColumn()
   createdAt: Date;

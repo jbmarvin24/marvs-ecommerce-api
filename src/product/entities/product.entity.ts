@@ -3,11 +3,13 @@ import {
   CreateDateColumn,
   Entity,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { Category } from '../../category/entities/category.entity';
 import { Shop } from '../../shop/entities/shop.entity';
+import { Wishlist } from '../../wishlist/entities/wishlist.entity';
 
 @Entity()
 export class Product {
@@ -44,6 +46,9 @@ export class Product {
 
   @Column()
   stock: number;
+
+  @OneToMany(() => Wishlist, (wishlist) => wishlist.products)
+  wishlist: Wishlist[];
 
   @Column({ length: 100 })
   brand: string;

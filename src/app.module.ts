@@ -17,6 +17,8 @@ import { ProfileModule } from './profile/profile.module';
 import { Profile } from './profile/entities/profile.entity';
 import { ProductModule } from './product/product.module';
 import { Product } from './product/entities/product.entity';
+import { WishlistModule } from './wishlist/wishlist.module';
+import { Wishlist } from './wishlist/entities/wishlist.entity';
 
 @Module({
   imports: [
@@ -27,7 +29,16 @@ import { Product } from './product/entities/product.entity';
       username: 'postgres',
       password: 'batman@dev',
       database: 'marvs_ecommerce',
-      entities: [User, Profile, Shop, Category, VoucherType, Voucher, Product],
+      entities: [
+        User,
+        Profile,
+        Shop,
+        Category,
+        VoucherType,
+        Voucher,
+        Product,
+        Wishlist,
+      ],
       synchronize: true,
       // dropSchema: true,
     }),
@@ -39,6 +50,7 @@ import { Product } from './product/entities/product.entity';
     VoucherModule,
     ProfileModule,
     ProductModule,
+    WishlistModule,
   ],
   controllers: [AppController],
   providers: [AppService],
