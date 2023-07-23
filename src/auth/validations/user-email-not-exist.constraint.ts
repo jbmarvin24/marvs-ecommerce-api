@@ -15,7 +15,6 @@ export class UserEmailNotExistConstraint
   constructor(private userService: UserService) {}
 
   async validate(value: any): Promise<boolean> {
-    console.log(this.userService);
     return !(await this.userService.IsEmailExist(value));
   }
   defaultMessage?(): string {
