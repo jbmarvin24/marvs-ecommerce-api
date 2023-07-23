@@ -85,7 +85,7 @@ export class UserService {
       id: shopId,
     });
 
-    if (!shop) throw new NotFoundException('Shop not found.');
+    if (!shop) throw new NotFoundException(`shopId ${shopId} does not exists.`);
 
     return shop.userId === currentUserId;
   }
