@@ -1,40 +1,23 @@
-import {
-  Controller,
-  Get,
-  Body,
-  Patch,
-  Param,
-  Delete,
-  ParseIntPipe,
-} from '@nestjs/common';
+import { Controller, Get, Body, Patch } from '@nestjs/common';
 import { ProfileService } from './profile.service';
 import { UpdateProfileDto } from './dto/update-profile.dto';
+import { CurrentUser } from '../user/decorators/current-user.decorator';
+import { User } from '../user/entities/user.entity';
 
-@Controller('profile')
+@Controller('user/me/profile')
 export class ProfileController {
   constructor(private readonly profileService: ProfileService) {}
 
   @Get()
-  findAll() {
-    // TODO: pagination
-    return this.profileService.findAll();
+  findOne(@CurrentUser() user: User) {
+    return this.profileService.findOne(user.id);
   }
 
-  @Get(':id')
-  findOne(@Param('id', ParseIntPipe) id: number) {
-    return this.profileService.findOne(id);
-  }
-
-  @Patch(':id')
+  @Patch()
   update(
-    @Param('id', ParseIntPipe) id: number,
+    @CurrentUser() user: User,
     @Body() updateProfileDto: UpdateProfileDto,
   ) {
-    return this.profileService.update(id, updateProfileDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id', ParseIntPipe) id: number) {
-    return this.profileService.remove(id);
+    return this.profileService.update(user.id, updateProfileDto);
   }
 }
