@@ -6,6 +6,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { APP_GUARD } from '@nestjs/core';
 import { AuthGuard } from './guards/auth.guard';
 import { UserEmailNotExistConstraint } from './validations/user-email-not-exist.constraint';
+import { AdminGuard } from './guards/admin.guard';
 
 @Module({
   imports: [
@@ -22,6 +23,10 @@ import { UserEmailNotExistConstraint } from './validations/user-email-not-exist.
     {
       provide: APP_GUARD,
       useClass: AuthGuard,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: AdminGuard,
     },
     UserEmailNotExistConstraint,
   ],

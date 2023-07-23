@@ -7,17 +7,17 @@ import {
   Param,
   Delete,
   ParseIntPipe,
-  NotFoundException,
 } from '@nestjs/common';
 import { VoucherTypeService } from './voucher-type.service';
 import { CreateVoucherTypeDto } from './dto/create-voucher-type.dto';
 import { UpdateVoucherTypeDto } from './dto/update-voucher-type.dto';
-import { VoucherType } from './entities/voucher-type.entity';
+import { Admin } from '../auth/decorators/admin.decorator';
 
 @Controller('voucher-type')
 export class VoucherTypeController {
   constructor(private readonly voucherTypeService: VoucherTypeService) {}
 
+  @Admin()
   @Post()
   async create(@Body() createVoucherTypeDto: CreateVoucherTypeDto) {
     return await this.voucherTypeService.create(createVoucherTypeDto);
@@ -33,6 +33,7 @@ export class VoucherTypeController {
     return await this.voucherTypeService.findOne(id);
   }
 
+  @Admin()
   @Patch(':id')
   async update(
     @Param('id', ParseIntPipe) id: number,
@@ -41,6 +42,7 @@ export class VoucherTypeController {
     return this.voucherTypeService.update(id, updateVoucherTypeDto);
   }
 
+  @Admin()
   @Delete(':id')
   async remove(@Param('id', ParseIntPipe) id: number) {
     return this.voucherTypeService.remove(id);
