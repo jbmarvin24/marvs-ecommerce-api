@@ -50,4 +50,17 @@ export class CategoryService {
 
     return this.categoryRepository.remove(category);
   }
+
+  /**
+   * Validate the existence of category.
+   * @param id Category Id
+   * @returns True if category exists.
+   */
+  async IsCategoryIdExist(id: number) {
+    const category = await this.categoryRepository.findOne({
+      where: { id },
+    });
+
+    return Boolean(category);
+  }
 }

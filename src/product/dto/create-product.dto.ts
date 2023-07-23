@@ -1,6 +1,8 @@
 import { IsArray, IsNotEmpty, IsNumber, MaxLength, Min } from 'class-validator';
+import { CategoryMustExist } from '../../category/validations/category-must-exist.constraint';
 
 export class CreateProductDto {
+  @CategoryMustExist()
   @IsNumber()
   categoryId: number;
 
