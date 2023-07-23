@@ -1,4 +1,13 @@
-import { IsNotEmpty, MaxLength, IsOptional } from 'class-validator';
+import {
+  IsNotEmpty,
+  MaxLength,
+  IsOptional,
+  ValidateNested,
+  IsJSON,
+  IsNotEmptyObject,
+} from 'class-validator';
+import { AddressDto } from './address.dto';
+import { Type } from 'class-transformer';
 
 export class CreateProfileDto {
   @IsNotEmpty()
@@ -13,9 +22,10 @@ export class CreateProfileDto {
   @MaxLength(500)
   middleName?: string;
 
-  @IsNotEmpty()
-  @MaxLength(500)
-  shippingAddress: string;
+  @ValidateNested()
+  @IsNotEmptyObject()
+  @Type(() => AddressDto)
+  shippingAddress: AddressDto;
 
   @IsNotEmpty()
   @MaxLength(100)

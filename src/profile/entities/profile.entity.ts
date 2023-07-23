@@ -34,8 +34,13 @@ export class Profile {
   @Column({ nullable: true, length: 100 })
   middleName?: string;
 
-  @Column({ length: 500 })
-  shippingAddress: string;
+  @Column('simple-json')
+  shippingAddress: {
+    province: string;
+    city: string;
+    barangay: string;
+    street: string;
+  };
 
   @Column({ length: 100 })
   phoneNo: string;
