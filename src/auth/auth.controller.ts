@@ -22,7 +22,8 @@ export class AuthContoller {
   @HttpCode(HttpStatus.OK)
   @Post('/register')
   async register(@Body() registerDto: RegisterDto) {
-    return await this.authService.register({
+    // TODO: return Standard Success Reponse
+    await this.authService.register({
       ...registerDto,
     });
   }

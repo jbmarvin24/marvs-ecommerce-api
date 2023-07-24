@@ -10,6 +10,7 @@ import {
 import { Shop } from '../../shop/entities/shop.entity';
 import { Profile } from '../../profile/entities/profile.entity';
 import { Wishlist } from '../../wishlist/entities/wishlist.entity';
+import { Expose } from 'class-transformer';
 
 @Entity()
 export class User {
@@ -17,15 +18,18 @@ export class User {
     Object.assign(this, partial);
   }
 
+  @Expose()
   @PrimaryGeneratedColumn()
   id: number;
 
+  @Expose()
   @Column({ unique: true, length: 100 })
   email: string;
 
   @Column({ type: 'text' })
   password: string;
 
+  @Expose()
   @Column({ default: false })
   isAdmin: boolean;
 
@@ -38,9 +42,11 @@ export class User {
   @OneToMany(() => Wishlist, (wishlist) => wishlist.users)
   wishlist: Wishlist[];
 
+  @Expose()
   @CreateDateColumn()
   createdAt: Date;
 
+  @Expose()
   @UpdateDateColumn()
   updatedAt: Date;
 }
