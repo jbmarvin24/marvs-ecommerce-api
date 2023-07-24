@@ -7,13 +7,13 @@ export class RegisterDto extends CreateProfileDto {
   @IsEmail()
   email: string;
 
-  @IsNotEmpty()
   @IsStrongPassword(
     { minLength: 6 },
     {
       message:
-        'Password must be at least 6 characters and contains lower and uppuer case letters, numbers and symbols.',
+        'password must be at least 6 characters and contains lower and uppuer case letters, numbers and symbols.',
     },
   )
+  @IsNotEmpty()
   password: string;
 }

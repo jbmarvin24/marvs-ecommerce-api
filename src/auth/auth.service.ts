@@ -1,10 +1,15 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { UserService } from '../user/user.service';
 import { JwtService } from '@nestjs/jwt';
 import { User } from '../user/entities/user.entity';
 import * as bcrypt from 'bcrypt';
 import { RegisterDto } from './dto/register.dto';
 import { Profile } from '../profile/entities/profile.entity';
+import { ChangePasswordDto } from './dto/change-password.dto';
 
 @Injectable()
 export class AuthService {
@@ -41,5 +46,23 @@ export class AuthService {
     );
 
     return user;
+  }
+
+  async changePassword(user: User, changePasswordDto: ChangePasswordDto) {
+    const { oldPassword, newPassword } = changePasswordDto;
+    const isMatch = await bcrypt.compare(oldPassword, user.password);
+
+    // TODO: Change this array return of exception
+    if (!isMatch)
+      throw new BadRequestException(['oldPassword does not matched.']);
+
+    if (oldPassword === newPassword)
+      throw new BadRequestException([
+        'newPassword must not be the same with the Old Password.',
+      ]);
+
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+    await this.userService.changePassword(user.id, hashedPassword);
   }
 }

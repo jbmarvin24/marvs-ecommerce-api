@@ -75,6 +75,18 @@ export class UserService {
     return await this.userRepository.remove(user);
   }
 
+  async changePassword(userId: number, newHashedPassword: string) {
+    const user = await this.userRepository.findOneOrFail({
+      where: {
+        id: userId,
+      },
+    });
+
+    user.password = newHashedPassword;
+
+    return await this.userRepository.save(user);
+  }
+
   /** Validates the shop ownership of the current logged in user.
    * @param {number} currentUserId The current logged in user.
    * @param {number} shopId The Shop Id
