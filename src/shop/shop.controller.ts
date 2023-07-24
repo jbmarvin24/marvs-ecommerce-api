@@ -38,12 +38,16 @@ export class ShopController {
   async update(
     @Param('id', ParseIntPipe) id: number,
     @Body() updateShopDto: UpdateShopDto,
+    @CurrentUser() user: User,
   ) {
-    return this.shopService.update(id, updateShopDto);
+    return this.shopService.update(user.id, id, updateShopDto);
   }
 
   @Delete(':id')
-  async remove(@Param('id', ParseIntPipe) id: number) {
-    return await this.shopService.remove(id);
+  async remove(
+    @Param('id', ParseIntPipe) id: number,
+    @CurrentUser() user: User,
+  ) {
+    return await this.shopService.remove(user.id, id);
   }
 }

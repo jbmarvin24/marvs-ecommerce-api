@@ -18,7 +18,7 @@ export class ProductService {
     shopId: number,
     createProductDto: CreateProductDto,
   ) {
-    await this.validateShopOwnership(userId, shopId);
+    await this.validateProductOwnership(userId, shopId);
 
     return await this.productRepository.save(
       new Product({ ...createProductDto, shopId }),
@@ -43,7 +43,7 @@ export class ProductService {
     shopId: number,
     updateProductDto: UpdateProductDto,
   ) {
-    await this.validateShopOwnership(userId, shopId);
+    await this.validateProductOwnership(userId, shopId);
 
     const product = await this.productRepository.findOneByOrFail({
       id,
@@ -58,7 +58,7 @@ export class ProductService {
   }
 
   async remove(id: number, userId: number, shopId: number) {
-    await this.validateShopOwnership(userId, shopId);
+    await this.validateProductOwnership(userId, shopId);
 
     const product = await this.productRepository.findOneByOrFail({
       id,
@@ -67,9 +67,12 @@ export class ProductService {
     return await this.productRepository.remove(product);
   }
 
-  private async validateShopOwnership(currentUser: number, shopId: number) {
+  private async validateProductOwnership(
+    currentUserId: number,
+    shopId: number,
+  ) {
     const isOwner = await this.userService.validateShopOwner(
-      currentUser,
+      currentUserId,
       shopId,
     );
     if (!isOwner) throw new ForbiddenException('Invalid shop owner');
