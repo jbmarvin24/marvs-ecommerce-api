@@ -25,6 +25,10 @@ export class ProductService {
     );
   }
 
+  async findAll() {
+    return await this.productRepository.find();
+  }
+
   async findAllByShopId(shopId: number) {
     return await this.productRepository.findBy({
       shopId,

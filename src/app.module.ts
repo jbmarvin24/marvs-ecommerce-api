@@ -19,6 +19,7 @@ import { ProductModule } from './product/product.module';
 import { Product } from './product/entities/product.entity';
 import { WishlistModule } from './wishlist/wishlist.module';
 import { Wishlist } from './wishlist/entities/wishlist.entity';
+import { SearchModule } from './search/search.module';
 
 @Module({
   imports: [
@@ -51,6 +52,7 @@ import { Wishlist } from './wishlist/entities/wishlist.entity';
     ProfileModule,
     ProductModule,
     WishlistModule,
+    SearchModule,
   ],
   controllers: [AppController],
   providers: [AppService],
