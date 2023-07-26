@@ -35,6 +35,12 @@ export class ShopService {
     });
   }
 
+  async findByUser(userId: number) {
+    return await this.shopRepository.findBy({
+      userId,
+    });
+  }
+
   async update(
     userId: number,
     shopId: number,

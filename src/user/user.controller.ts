@@ -15,11 +15,15 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { CurrentUser } from './decorators/current-user.decorator';
 import { User } from './entities/user.entity';
 import { Admin } from '../auth/decorators/admin.decorator';
+import { ShopService } from '../shop/shop.service';
 
 @Controller('user')
 @SerializeOptions({ strategy: 'excludeAll' })
 export class UserController {
-  constructor(private readonly userService: UserService) {}
+  constructor(
+    private readonly userService: UserService,
+    private readonly shopService: ShopService,
+  ) {}
 
   @UseInterceptors(ClassSerializerInterceptor)
   @Get('me')
@@ -48,13 +52,18 @@ export class UserController {
     @Param('id', ParseIntPipe) id: number,
     @Body() updateUserDto: UpdateUserDto,
   ) {
-    return this.userService.update(id, updateUserDto);
+    return await this.userService.update(id, updateUserDto);
   }
 
   @UseInterceptors(ClassSerializerInterceptor)
   @Admin()
   @Delete(':id')
   async remove(@Param('id', ParseIntPipe) id: number) {
-    return this.userService.remove(id);
+    return await this.userService.remove(id);
+  }
+
+  @Get('me/shops')
+  async shops(@CurrentUser() user: User) {
+    return await this.shopService.findByUser(user.id);
   }
 }
