@@ -1,17 +1,19 @@
-import { ForbiddenException, Injectable } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateShopDto } from './dto/create-shop.dto';
 import { UpdateShopDto } from './dto/update-shop.dto';
 import { Repository } from 'typeorm';
 import { Shop } from './entities/shop.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { UserService } from '../user/user.service';
 
 @Injectable()
 export class ShopService {
   constructor(
     @InjectRepository(Shop)
     private readonly shopRepository: Repository<Shop>,
-    private readonly userService: UserService,
   ) {}
 
   async create(userId: number, createShopDto: CreateShopDto): Promise<Shop> {
@@ -65,9 +67,20 @@ export class ShopService {
     return await this.shopRepository.remove(shop);
   }
 
-  async validateShopOwner(userId: number, shopId: number) {
-    const isMatch = await this.userService.validateShopOwner(userId, shopId);
+  /**
+   * Validates the shop owner by the given user id.
+   * This will throw a Forbidden Exception if invalid.
+   * @param currentUserId
+   * @param shopId
+   */
+  async validateShopOwner(currentUserId: number, shopId: number) {
+    const shop = await this.shopRepository.findOneBy({
+      id: shopId,
+    });
 
-    if (!isMatch) throw new ForbiddenException('Invalid shop owner');
+    if (!shop) throw new NotFoundException(`shopId ${shopId} does not exists.`);
+
+    if (shop.userId !== currentUserId)
+      throw new ForbiddenException('Invalid shop owner');
   }
 }

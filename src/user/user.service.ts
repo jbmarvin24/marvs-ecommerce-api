@@ -4,15 +4,12 @@ import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Profile } from '../profile/entities/profile.entity';
-import { Shop } from '../shop/entities/shop.entity';
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
-    @InjectRepository(Shop)
-    private readonly shopRepository: Repository<Shop>,
   ) {}
 
   async create(user: User, profile: Profile): Promise<User> {
@@ -85,21 +82,6 @@ export class UserService {
     user.password = newHashedPassword;
 
     return await this.userRepository.save(user);
-  }
-
-  /** Validates the shop ownership of the current logged in user.
-   * @param {number} currentUserId The current logged in user.
-   * @param {number} shopId The Shop Id
-   * @returns {boolean} Return true if the current user is owned the shop else false.
-   */
-  async validateShopOwner(currentUserId: number, shopId: number) {
-    const shop = await this.shopRepository.findOneBy({
-      id: shopId,
-    });
-
-    if (!shop) throw new NotFoundException(`shopId ${shopId} does not exists.`);
-
-    return shop.userId === currentUserId;
   }
 
   /**
