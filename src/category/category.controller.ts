@@ -12,6 +12,8 @@ import { CategoryService } from './category.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 import { Admin } from '../auth/decorators/admin.decorator';
+import { Response } from '../interceptors/transform-response.interceptor';
+import { Category } from './entities/category.entity';
 
 @Controller('category')
 export class CategoryController {
@@ -19,19 +21,30 @@ export class CategoryController {
 
   @Admin()
   @Post()
-  async create(@Body() createCategoryDto: CreateCategoryDto) {
-    return await this.categoryService.create(createCategoryDto);
+  async create(
+    @Body() createCategoryDto: CreateCategoryDto,
+  ): Promise<Response<Category>> {
+    return {
+      data: await this.categoryService.create(createCategoryDto),
+      message: 'Successfully created',
+    };
   }
 
   @Get()
-  async findAll() {
+  async findAll(): Promise<Response<Category[]>> {
     // TODO: Pagination
-    return await this.categoryService.findAll();
+    return {
+      data: await this.categoryService.findAll(),
+    };
   }
 
   @Get(':id')
-  async findOne(@Param('id', ParseIntPipe) id: number) {
-    return await this.categoryService.findOne(id);
+  async findOne(
+    @Param('id', ParseIntPipe) id: number,
+  ): Promise<Response<Category>> {
+    return {
+      data: await this.categoryService.findOne(id),
+    };
   }
 
   @Admin()
@@ -39,13 +52,22 @@ export class CategoryController {
   async update(
     @Param('id', ParseIntPipe) id: number,
     @Body() updateCategoryDto: UpdateCategoryDto,
-  ) {
-    return await this.categoryService.update(id, updateCategoryDto);
+  ): Promise<Response<Category>> {
+    return {
+      data: await this.categoryService.update(id, updateCategoryDto),
+      message: 'Successfully updated.',
+    };
   }
 
   @Admin()
   @Delete(':id')
-  async remove(@Param('id', ParseIntPipe) id: number) {
-    return await this.categoryService.remove(id);
+  async remove(
+    @Param('id', ParseIntPipe) id: number,
+  ): Promise<Response<undefined>> {
+    await this.categoryService.remove(id);
+
+    return {
+      message: 'Successfully deleted.',
+    };
   }
 }

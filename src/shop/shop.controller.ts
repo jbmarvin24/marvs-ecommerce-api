@@ -13,25 +13,39 @@ import { CreateShopDto } from './dto/create-shop.dto';
 import { UpdateShopDto } from './dto/update-shop.dto';
 import { CurrentUser } from '../user/decorators/current-user.decorator';
 import { User } from '../user/entities/user.entity';
+import { Response } from '../interceptors/transform-response.interceptor';
+import { Shop } from './entities/shop.entity';
 
 @Controller('shop')
 export class ShopController {
   constructor(private readonly shopService: ShopService) {}
 
   @Post()
-  create(@Body() createShopDto: CreateShopDto, @CurrentUser() user: User) {
-    return this.shopService.create(user.id, createShopDto);
+  async create(
+    @Body() createShopDto: CreateShopDto,
+    @CurrentUser() user: User,
+  ): Promise<Response<Shop>> {
+    return {
+      data: await this.shopService.create(user.id, createShopDto),
+      message: 'Successfully created.',
+    };
   }
 
   @Get()
-  findAll() {
+  async findAll(): Promise<Response<Shop[]>> {
     // TODO: Pagination
-    return this.shopService.findAll();
+    return {
+      data: await this.shopService.findAll(),
+    };
   }
 
   @Get(':id')
-  async findOne(@Param('id', ParseIntPipe) id: number) {
-    return await this.shopService.findOne(id);
+  async findOne(
+    @Param('id', ParseIntPipe) id: number,
+  ): Promise<Response<Shop>> {
+    return {
+      data: await this.shopService.findOne(id),
+    };
   }
 
   @Patch(':id')
@@ -39,15 +53,22 @@ export class ShopController {
     @Param('id', ParseIntPipe) id: number,
     @Body() updateShopDto: UpdateShopDto,
     @CurrentUser() user: User,
-  ) {
-    return this.shopService.update(user.id, id, updateShopDto);
+  ): Promise<Response<Shop>> {
+    return {
+      data: await this.shopService.update(user.id, id, updateShopDto),
+      message: 'Successfully updated.',
+    };
   }
 
   @Delete(':id')
   async remove(
     @Param('id', ParseIntPipe) id: number,
     @CurrentUser() user: User,
-  ) {
-    return await this.shopService.remove(user.id, id);
+  ): Promise<Response<undefined>> {
+    await this.shopService.remove(user.id, id);
+
+    return {
+      message: 'Successfully deleted.',
+    };
   }
 }

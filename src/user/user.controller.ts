@@ -16,6 +16,9 @@ import { CurrentUser } from './decorators/current-user.decorator';
 import { User } from './entities/user.entity';
 import { Admin } from '../auth/decorators/admin.decorator';
 import { ShopService } from '../shop/shop.service';
+import { Response } from '../interceptors/transform-response.interceptor';
+import { UserDto } from './dto/user.dto';
+import { Shop } from '../shop/entities/shop.entity';
 
 @Controller('user')
 @SerializeOptions({ strategy: 'excludeAll' })
@@ -27,22 +30,30 @@ export class UserController {
 
   @UseInterceptors(ClassSerializerInterceptor)
   @Get('me')
-  async me(@CurrentUser() user: User) {
-    return user;
+  me(@CurrentUser() user: User): Response<User> {
+    return new UserDto({
+      data: user,
+    });
   }
 
   @UseInterceptors(ClassSerializerInterceptor)
   @Admin()
   @Get()
-  async findAll() {
-    return await this.userService.findAll();
+  async findAll(): Promise<Response<User[]>> {
+    return new UserDto({
+      data: await this.userService.findAll(),
+    });
   }
 
   @UseInterceptors(ClassSerializerInterceptor)
   @Get(':id')
   @Admin()
-  async findOne(@Param('id', ParseIntPipe) id: number) {
-    return await this.userService.findOne(id);
+  async findOne(
+    @Param('id', ParseIntPipe) id: number,
+  ): Promise<Response<User>> {
+    return new UserDto({
+      data: await this.userService.findOne(id),
+    });
   }
 
   @UseInterceptors(ClassSerializerInterceptor)
@@ -51,19 +62,30 @@ export class UserController {
   async update(
     @Param('id', ParseIntPipe) id: number,
     @Body() updateUserDto: UpdateUserDto,
-  ) {
-    return await this.userService.update(id, updateUserDto);
+  ): Promise<Response<User>> {
+    return new UserDto({
+      data: await this.userService.update(id, updateUserDto),
+      message: 'Successfully updated.',
+    });
   }
 
   @UseInterceptors(ClassSerializerInterceptor)
   @Admin()
   @Delete(':id')
-  async remove(@Param('id', ParseIntPipe) id: number) {
-    return await this.userService.remove(id);
+  async remove(
+    @Param('id', ParseIntPipe) id: number,
+  ): Promise<Response<undefined>> {
+    await this.userService.remove(id);
+
+    return new UserDto({
+      message: 'Successfully deleted.',
+    });
   }
 
   @Get('me/shops')
-  async shops(@CurrentUser() user: User) {
-    return await this.shopService.findByUser(user.id);
+  async shops(@CurrentUser() user: User): Promise<Response<Shop[]>> {
+    return {
+      data: await this.shopService.findByUser(user.id),
+    };
   }
 }

@@ -12,6 +12,8 @@ import { VoucherService } from './voucher.service';
 import { CreateVoucherDto } from './dto/create-voucher.dto';
 import { UpdateVoucherDto } from './dto/update-voucher.dto';
 import { Admin } from '../auth/decorators/admin.decorator';
+import { Response } from '../interceptors/transform-response.interceptor';
+import { Voucher } from './entities/voucher.entity';
 
 @Controller('voucher')
 export class VoucherController {
@@ -19,18 +21,29 @@ export class VoucherController {
 
   @Admin()
   @Post()
-  async create(@Body() createVoucherDto: CreateVoucherDto) {
-    return await this.voucherService.create(createVoucherDto);
+  async create(
+    @Body() createVoucherDto: CreateVoucherDto,
+  ): Promise<Response<Voucher>> {
+    return {
+      data: await this.voucherService.create(createVoucherDto),
+      message: 'Successfully created.',
+    };
   }
 
   @Get()
-  async findAll() {
-    return await this.voucherService.findAll();
+  async findAll(): Promise<Response<Voucher[]>> {
+    return {
+      data: await this.voucherService.findAll(),
+    };
   }
 
   @Get(':id')
-  async findOne(@Param('id', ParseIntPipe) id: number) {
-    return await this.voucherService.findOne(id);
+  async findOne(
+    @Param('id', ParseIntPipe) id: number,
+  ): Promise<Response<Voucher>> {
+    return {
+      data: await this.voucherService.findOne(id),
+    };
   }
 
   @Admin()
@@ -38,13 +51,22 @@ export class VoucherController {
   async update(
     @Param('id', ParseIntPipe) id: number,
     @Body() updateVoucherDto: UpdateVoucherDto,
-  ) {
-    return await this.voucherService.update(id, updateVoucherDto);
+  ): Promise<Response<Voucher>> {
+    return {
+      data: await this.voucherService.update(id, updateVoucherDto),
+      message: 'Successfully updated.',
+    };
   }
 
   @Admin()
   @Delete(':id')
-  async remove(@Param('id', ParseIntPipe) id: number) {
-    return await this.voucherService.remove(id);
+  async remove(
+    @Param('id', ParseIntPipe) id: number,
+  ): Promise<Response<undefined>> {
+    await this.voucherService.remove(id);
+
+    return {
+      message: 'Successfully deleted.',
+    };
   }
 }

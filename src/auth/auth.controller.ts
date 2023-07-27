@@ -26,7 +26,6 @@ export class AuthContoller {
     return {
       data: { token },
       message: 'Successfully logged in.',
-      success: true,
     };
   }
 
@@ -39,7 +38,6 @@ export class AuthContoller {
     });
 
     return {
-      success: true,
       message: 'Successfully Registered.',
     };
   }
@@ -53,7 +51,6 @@ export class AuthContoller {
     await this.authService.changePassword(user, changePasswordDto);
 
     return {
-      success: true,
       message: 'Successfully changed the password.',
     };
   }

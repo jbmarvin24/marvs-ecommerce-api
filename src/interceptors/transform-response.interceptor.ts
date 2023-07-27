@@ -9,8 +9,8 @@ import { map } from 'rxjs/operators';
 
 export interface Response<T> {
   statusCode?: number;
-  success: boolean;
-  message: string;
+  success?: boolean;
+  message?: string;
   data?: T;
 }
 
@@ -25,8 +25,8 @@ export class TransformResponseInterceptor<T>
     return next.handle().pipe(
       map(({ message, data, success }) => ({
         statusCode: context.switchToHttp().getResponse().statusCode,
-        success,
-        message: message,
+        success: success === undefined,
+        message,
         data,
       })),
     );
