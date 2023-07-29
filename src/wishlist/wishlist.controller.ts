@@ -15,10 +15,14 @@ import { CurrentUser } from '../user/decorators/current-user.decorator';
 import { User } from '../user/entities/user.entity';
 import { Response } from '../interceptors/transform-response.interceptor';
 import { Wishlist } from './entities/wishlist.entity';
+import { ProductService } from '../product/product.service';
 
 @Controller('user/me/wishlist')
 export class WishlistController {
-  constructor(private readonly wishlistService: WishlistService) {}
+  constructor(
+    private readonly wishlistService: WishlistService,
+    private readonly productService: ProductService,
+  ) {}
 
   @HttpCode(HttpStatus.OK)
   @Post()
@@ -26,6 +30,9 @@ export class WishlistController {
     @Body() createWishlistDto: CreateWishlistDto,
     @CurrentUser() user: User,
   ): Promise<Response<undefined>> {
+    // Validate product existence
+    await this.productService.findOneOrThrow(createWishlistDto.productId);
+
     await this.wishlistService.create(user.id, createWishlistDto.productId);
 
     return {
