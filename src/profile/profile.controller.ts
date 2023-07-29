@@ -13,7 +13,7 @@ export class ProfileController {
   @Get()
   async findOne(@CurrentUser() user: User): Promise<Response<Profile>> {
     return {
-      data: await this.profileService.findOne(user.id),
+      data: await this.profileService.findOneOrThrow(user.id),
     };
   }
 

@@ -52,7 +52,7 @@ export class UserController {
     @Param('id', ParseIntPipe) id: number,
   ): Promise<Response<User>> {
     return new UserDto({
-      data: await this.userService.findOne(id),
+      data: await this.userService.findOneOrThrow(id),
     });
   }
 

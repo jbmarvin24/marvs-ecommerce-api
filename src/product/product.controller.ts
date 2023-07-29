@@ -46,7 +46,7 @@ export class ProductController {
     @Param('id', ParseIntPipe) id: number,
   ): Promise<Response<Product>> {
     return {
-      data: await this.productService.findOne(id),
+      data: await this.productService.findOneOrThrow(id),
     };
   }
 

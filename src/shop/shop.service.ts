@@ -28,10 +28,8 @@ export class ShopService {
   }
 
   async findOne(id: number): Promise<Shop> {
-    return await this.shopRepository.findOneOrFail({
-      where: {
-        id,
-      },
+    return await this.shopRepository.findOneBy({
+      id,
     });
   }
 
@@ -48,11 +46,7 @@ export class ShopService {
   ): Promise<Shop> {
     await this.validateShopOwner(userId, shopId);
 
-    const shop = await this.shopRepository.findOneOrFail({
-      where: {
-        id: shopId,
-      },
-    });
+    const shop = await this.findOneOrThrow(shopId);
 
     return await this.shopRepository.save(
       new Shop({
@@ -65,11 +59,8 @@ export class ShopService {
   async remove(userId: number, shopId: number): Promise<Shop> {
     await this.validateShopOwner(userId, shopId);
 
-    const shop = await this.shopRepository.findOneOrFail({
-      where: {
-        id: shopId,
-      },
-    });
+    const shop = await this.findOneOrThrow(shopId);
+
     return await this.shopRepository.remove(shop);
   }
 
@@ -80,13 +71,17 @@ export class ShopService {
    * @param shopId
    */
   async validateShopOwner(currentUserId: number, shopId: number) {
-    const shop = await this.shopRepository.findOneBy({
-      id: shopId,
-    });
-
-    if (!shop) throw new NotFoundException(`shopId ${shopId} does not exists.`);
+    const shop = await this.findOneOrThrow(shopId);
 
     if (shop.userId !== currentUserId)
       throw new ForbiddenException('Invalid shop owner');
+  }
+
+  async findOneOrThrow(id: number) {
+    const shop = await this.findOne(id);
+
+    if (!shop) throw new NotFoundException('Shop not found.');
+
+    return shop;
   }
 }

@@ -1,4 +1,4 @@
-import { ForbiddenException, Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { Repository } from 'typeorm';
@@ -36,7 +36,7 @@ export class ProductService {
   }
 
   async findOne(id: number) {
-    return await this.productRepository.findOneByOrFail({
+    return await this.productRepository.findOneBy({
       id,
     });
   }
@@ -49,9 +49,7 @@ export class ProductService {
   ) {
     await this.shopService.validateShopOwner(userId, shopId);
 
-    const product = await this.productRepository.findOneByOrFail({
-      id,
-    });
+    const product = await this.findOneOrThrow(id);
 
     return await this.productRepository.save(
       new Product({
@@ -64,10 +62,16 @@ export class ProductService {
   async remove(id: number, userId: number, shopId: number) {
     await this.shopService.validateShopOwner(userId, shopId);
 
-    const product = await this.productRepository.findOneByOrFail({
-      id,
-    });
+    const product = await this.findOneOrThrow(id);
 
     return await this.productRepository.remove(product);
+  }
+
+  async findOneOrThrow(id: number) {
+    const product = await this.findOne(id);
+
+    if (!product) throw new NotFoundException('Product not found.');
+
+    return product;
   }
 }

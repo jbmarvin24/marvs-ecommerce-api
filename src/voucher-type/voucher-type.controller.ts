@@ -42,7 +42,7 @@ export class VoucherTypeController {
     @Param('id', ParseIntPipe) id: number,
   ): Promise<Response<VoucherType>> {
     return {
-      data: await this.voucherTypeService.findOne(id),
+      data: await this.voucherTypeService.findOneOrThrow(id),
     };
   }
 

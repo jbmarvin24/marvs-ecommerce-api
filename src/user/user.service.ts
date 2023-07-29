@@ -35,10 +35,8 @@ export class UserService {
   }
 
   async findOne(id: number): Promise<User> {
-    return await this.userRepository.findOneOrFail({
-      where: {
-        id,
-      },
+    return await this.userRepository.findOneBy({
+      id,
     });
   }
 
@@ -51,11 +49,7 @@ export class UserService {
   }
 
   async update(id: number, updateUserDto: UpdateUserDto): Promise<User> {
-    const user = await this.userRepository.findOneOrFail({
-      where: {
-        id,
-      },
-    });
+    const user = await this.findOneOrThrow(id);
 
     return await this.userRepository.save(
       new User({ ...user, ...updateUserDto }),
@@ -63,21 +57,13 @@ export class UserService {
   }
 
   async remove(id: number): Promise<User> {
-    const user = await this.userRepository.findOneOrFail({
-      where: {
-        id,
-      },
-    });
+    const user = await this.findOneOrThrow(id);
 
     return await this.userRepository.remove(user);
   }
 
   async changePassword(userId: number, newHashedPassword: string) {
-    const user = await this.userRepository.findOneOrFail({
-      where: {
-        id: userId,
-      },
-    });
+    const user = await this.findOneOrThrow(userId);
 
     user.password = newHashedPassword;
 
@@ -95,5 +81,13 @@ export class UserService {
     });
 
     return Boolean(user);
+  }
+
+  async findOneOrThrow(id: number) {
+    const user = await this.findOne(id);
+
+    if (!user) throw new NotFoundException('User not found.');
+
+    return user;
   }
 }

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateVoucherTypeDto } from './dto/create-voucher-type.dto';
 import { UpdateVoucherTypeDto } from './dto/update-voucher-type.dto';
 import { Repository } from 'typeorm';
@@ -25,10 +25,8 @@ export class VoucherTypeService {
   }
 
   async findOne(id: number): Promise<VoucherType> {
-    return await this.voucherTypeRepository.findOneOrFail({
-      where: {
-        id,
-      },
+    return await this.voucherTypeRepository.findOneBy({
+      id,
     });
   }
 
@@ -36,11 +34,7 @@ export class VoucherTypeService {
     id: number,
     updateVoucherTypeDto: UpdateVoucherTypeDto,
   ): Promise<VoucherType> {
-    const voucherType = await this.voucherTypeRepository.findOneOrFail({
-      where: {
-        id,
-      },
-    });
+    const voucherType = await this.findOneOrThrow(id);
 
     return await this.voucherTypeRepository.save(
       new VoucherType({
@@ -51,12 +45,16 @@ export class VoucherTypeService {
   }
 
   async remove(id: number): Promise<VoucherType> {
-    const voucherType = await this.voucherTypeRepository.findOneOrFail({
-      where: {
-        id,
-      },
-    });
+    const voucherType = await this.findOneOrThrow(id);
 
     return await this.voucherTypeRepository.remove(voucherType);
+  }
+
+  async findOneOrThrow(id: number) {
+    const voucherType = await this.findOne(id);
+
+    if (!voucherType) throw new NotFoundException('Voucher Type not found.');
+
+    return voucherType;
   }
 }
