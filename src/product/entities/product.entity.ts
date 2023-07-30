@@ -47,7 +47,7 @@ export class Product {
   @Column()
   stock: number;
 
-  @OneToMany(() => Wishlist, (wishlist) => wishlist.products)
+  @OneToMany(() => Wishlist, (wishlist) => wishlist.product)
   wishlist: Wishlist[];
 
   @Column({ length: 100 })

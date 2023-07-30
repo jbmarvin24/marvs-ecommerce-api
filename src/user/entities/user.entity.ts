@@ -39,7 +39,7 @@ export class User {
   @OneToMany(() => Shop, (shop) => shop.user)
   shops: Shop[];
 
-  @OneToMany(() => Wishlist, (wishlist) => wishlist.users)
+  @OneToMany(() => Wishlist, (wishlist) => wishlist.user)
   wishlist: Wishlist[];
 
   @Expose()

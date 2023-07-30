@@ -20,14 +20,14 @@ export class Wishlist {
 
   @ManyToOne(() => User, (user) => user.wishlist)
   @JoinColumn({ name: 'userId', referencedColumnName: 'id' })
-  users: User[];
+  user: User[];
 
   @PrimaryColumn()
   productId: number;
 
   @ManyToOne(() => Product, (product) => product.wishlist)
   @JoinColumn({ name: 'productId', referencedColumnName: 'id' })
-  products: Product[];
+  product: Product[];
 
   @CreateDateColumn()
   createdAt: Date;
