@@ -26,8 +26,13 @@ export class WishlistService {
   }
 
   async findAllbyUser(userId: number) {
-    return await this.wishlistRepository.findBy({
-      userId,
+    return await this.wishlistRepository.find({
+      where: {
+        userId,
+      },
+      relations: {
+        product: true,
+      },
     });
   }
 
