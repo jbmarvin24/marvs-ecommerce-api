@@ -14,7 +14,7 @@ export class CreateCategoryDto {
   @Min(1)
   @IsNumber()
   @IsOptional()
-  parentId: number;
+  parentId?: number;
 
   @MaxLength(500)
   @IsOptional()
