@@ -38,7 +38,7 @@ export class Product {
   @Column({ length: 500 })
   description: string;
 
-  @Column('simple-array')
+  @Column('simple-array', { nullable: true })
   photos: string[];
 
   @Column({ type: 'float' })

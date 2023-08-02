@@ -1,4 +1,11 @@
-import { IsArray, IsNotEmpty, IsNumber, MaxLength, Min } from 'class-validator';
+import {
+  IsArray,
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  MaxLength,
+  Min,
+} from 'class-validator';
 import { CategoryMustExist } from '../../category/validations/category-must-exist.constraint';
 
 export class CreateProductDto {
@@ -15,6 +22,7 @@ export class CreateProductDto {
   description: string;
 
   @IsArray()
+  @IsOptional()
   photos: string[];
 
   @Min(0)
