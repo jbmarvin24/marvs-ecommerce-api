@@ -5,6 +5,7 @@ import { Repository } from 'typeorm';
 import { Product } from './entities/product.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ShopService } from '../shop/shop.service';
+import { ProductQuery } from '../search/dto/product-query.dto';
 
 @Injectable()
 export class ProductService {
@@ -25,8 +26,27 @@ export class ProductService {
     );
   }
 
-  async findAll() {
-    return await this.productRepository.find();
+  async findAllPaginated(q: ProductQuery) {
+    const { page = 1, pageSize = 5, brand, name, priceMax, priceMin } = q;
+
+    const qb = this.productRepository.createQueryBuilder('p');
+
+    if (name) qb.andWhere('p.name LIKE :name', { name: `%${name}%` });
+    if (brand) qb.andWhere('p.brand LIKE :brand', { brand: `%${brand}%` });
+    if (priceMin) qb.andWhere('p.price >= :priceMin', { priceMin });
+    if (priceMax) qb.andWhere('p.price <= :priceMax', { priceMax });
+
+    const products = await qb
+      .limit(pageSize)
+      .offset((page - 1) * pageSize)
+      .getMany();
+
+    const count = await qb.getCount();
+
+    return {
+      products,
+      count,
+    };
   }
 
   async findAllByShopId(shopId: number) {
