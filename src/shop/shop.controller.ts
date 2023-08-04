@@ -7,6 +7,7 @@ import {
   Param,
   Delete,
   ParseIntPipe,
+  Query,
 } from '@nestjs/common';
 import { ShopService } from './shop.service';
 import { CreateShopDto } from './dto/create-shop.dto';
@@ -15,6 +16,8 @@ import { CurrentUser } from '../user/decorators/current-user.decorator';
 import { User } from '../user/entities/user.entity';
 import { Response } from '../interceptors/transform-response.interceptor';
 import { Shop } from './entities/shop.entity';
+import { PaginatedResult } from '../search/search.controller';
+import { ShopQuery } from './dto/shop-query.dto';
 
 @Controller('shop')
 export class ShopController {
@@ -32,10 +35,18 @@ export class ShopController {
   }
 
   @Get()
-  async findAll(): Promise<Response<Shop[]>> {
-    // TODO: Pagination
+  async findAll(
+    @Query() query: ShopQuery,
+  ): Promise<Response<PaginatedResult<Shop>>> {
+    const { count, shops } = await this.shopService.findAllPaginated(query);
+
+    console.log(query);
+
     return {
-      data: await this.shopService.findAll(),
+      data: {
+        count,
+        results: shops,
+      },
     };
   }
 

@@ -8,6 +8,7 @@ import { UpdateShopDto } from './dto/update-shop.dto';
 import { Repository } from 'typeorm';
 import { Shop } from './entities/shop.entity';
 import { InjectRepository } from '@nestjs/typeorm';
+import { ShopQuery } from './dto/shop-query.dto';
 
 @Injectable()
 export class ShopService {
@@ -22,9 +23,27 @@ export class ShopService {
     );
   }
 
-  async findAll(): Promise<Shop[]> {
-    // TODO: Pagination
-    return await this.shopRepository.find();
+  async findAllPaginated(q: ShopQuery) {
+    const { pageSize = 10, page = 1, name } = q;
+
+    const qb = this.shopRepository.createQueryBuilder('s');
+
+    if (name)
+      qb.andWhere('LOWER(s.name) LIKE :name', {
+        name: `%${name.toLowerCase()}%`,
+      });
+
+    const shops = await qb
+      .limit(pageSize)
+      .offset((page - 1) * pageSize)
+      .getMany();
+
+    const count = await qb.getCount();
+
+    return {
+      count,
+      shops,
+    };
   }
 
   async findOne(id: number): Promise<Shop> {

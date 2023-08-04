@@ -8,10 +8,11 @@ import { Product } from '../product/entities/product.entity';
 import { Voucher } from '../voucher/entities/voucher.entity';
 import { Shop } from '../shop/entities/shop.entity';
 import { ProductQuery } from './dto/product-query.dto';
+import { ShopQuery } from '../shop/dto/shop-query.dto';
 
-interface PaginatedProduct {
+export interface PaginatedResult<T> {
   count: number;
-  results: Product[];
+  results: T[];
 }
 
 @Public()
@@ -26,7 +27,7 @@ export class SearchController {
   @Get('products')
   async products(
     @Query() query: ProductQuery,
-  ): Promise<Response<PaginatedProduct>> {
+  ): Promise<Response<PaginatedResult<Product>>> {
     console.log(query);
 
     const { count, products } = await this.productService.findAllPaginated(
@@ -42,9 +43,18 @@ export class SearchController {
   }
 
   @Get('shops')
-  async shops(): Promise<Response<Shop[]>> {
+  async shops(
+    @Query() query: ShopQuery,
+  ): Promise<Response<PaginatedResult<Shop>>> {
+    console.log(query);
+
+    const { count, shops } = await this.shopService.findAllPaginated(query);
+
     return {
-      data: await this.shopService.findAll(),
+      data: {
+        count,
+        results: shops,
+      },
     };
   }
 
