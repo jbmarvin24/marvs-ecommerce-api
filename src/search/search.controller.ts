@@ -7,8 +7,8 @@ import { Response } from '../interceptors/transform-response.interceptor';
 import { Product } from '../product/entities/product.entity';
 import { Voucher } from '../voucher/entities/voucher.entity';
 import { Shop } from '../shop/entities/shop.entity';
-import { ProductQuery } from './dto/product-query.dto';
-import { ShopQuery } from '../shop/dto/shop-query.dto';
+import { ProductQueryDto } from '../product/dto/product-query.dto';
+import { ShopQueryDto } from '../shop/dto/shop-query.dto';
 import { VoucherQueryDto } from '../voucher/dto/voucher-query.dto';
 
 export interface PaginatedResult<T> {
@@ -27,7 +27,7 @@ export class SearchController {
 
   @Get('products')
   async products(
-    @Query() query: ProductQuery,
+    @Query() query: ProductQueryDto,
   ): Promise<Response<PaginatedResult<Product>>> {
     console.log(query);
 
@@ -45,7 +45,7 @@ export class SearchController {
 
   @Get('shops')
   async shops(
-    @Query() query: ShopQuery,
+    @Query() query: ShopQueryDto,
   ): Promise<Response<PaginatedResult<Shop>>> {
     console.log(query);
 

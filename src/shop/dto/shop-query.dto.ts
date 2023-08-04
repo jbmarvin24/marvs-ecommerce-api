@@ -1,6 +1,6 @@
 import { IsNumberString, IsOptional, IsString } from 'class-validator';
 
-export class ShopQuery {
+export class ShopQueryDto {
   @IsNumberString()
   @IsOptional()
   page?: number;

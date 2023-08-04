@@ -8,7 +8,7 @@ import { UpdateShopDto } from './dto/update-shop.dto';
 import { Repository } from 'typeorm';
 import { Shop } from './entities/shop.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { ShopQuery } from './dto/shop-query.dto';
+import { ShopQueryDto } from './dto/shop-query.dto';
 
 @Injectable()
 export class ShopService {
@@ -23,7 +23,7 @@ export class ShopService {
     );
   }
 
-  async findAllPaginated(q: ShopQuery) {
+  async findAllPaginated(q: ShopQueryDto) {
     const { pageSize = 10, page = 1, name } = q;
 
     const qb = this.shopRepository.createQueryBuilder('s');

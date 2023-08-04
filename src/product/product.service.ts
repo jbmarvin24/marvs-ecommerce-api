@@ -5,7 +5,7 @@ import { Repository } from 'typeorm';
 import { Product } from './entities/product.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ShopService } from '../shop/shop.service';
-import { ProductQuery } from '../search/dto/product-query.dto';
+import { ProductQueryDto } from './dto/product-query.dto';
 
 @Injectable()
 export class ProductService {
@@ -26,7 +26,7 @@ export class ProductService {
     );
   }
 
-  async findAllPaginated(q: ProductQuery) {
+  async findAllPaginated(q: ProductQueryDto) {
     const { page = 1, pageSize = 5, brand, name, priceMax, priceMin } = q;
 
     const qb = this.productRepository.createQueryBuilder('p');

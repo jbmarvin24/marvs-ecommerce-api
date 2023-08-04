@@ -17,7 +17,7 @@ import { User } from '../user/entities/user.entity';
 import { Response } from '../interceptors/transform-response.interceptor';
 import { Shop } from './entities/shop.entity';
 import { PaginatedResult } from '../search/search.controller';
-import { ShopQuery } from './dto/shop-query.dto';
+import { ShopQueryDto } from './dto/shop-query.dto';
 
 @Controller('shop')
 export class ShopController {
@@ -36,7 +36,7 @@ export class ShopController {
 
   @Get()
   async findAll(
-    @Query() query: ShopQuery,
+    @Query() query: ShopQueryDto,
   ): Promise<Response<PaginatedResult<Shop>>> {
     const { count, shops } = await this.shopService.findAllPaginated(query);
 
