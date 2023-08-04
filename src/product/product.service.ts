@@ -31,8 +31,14 @@ export class ProductService {
 
     const qb = this.productRepository.createQueryBuilder('p');
 
-    if (name) qb.andWhere('p.name LIKE :name', { name: `%${name}%` });
-    if (brand) qb.andWhere('p.brand LIKE :brand', { brand: `%${brand}%` });
+    if (name)
+      qb.andWhere('LOWER(p.name) LIKE :name', {
+        name: `%${name.toLowerCase()}%`,
+      });
+    if (brand)
+      qb.andWhere('LOWER(p.brand) LIKE :brand', {
+        brand: `%${brand.toLowerCase()}%`,
+      });
     if (priceMin) qb.andWhere('p.price >= :priceMin', { priceMin });
     if (priceMax) qb.andWhere('p.price <= :priceMax', { priceMax });
 
