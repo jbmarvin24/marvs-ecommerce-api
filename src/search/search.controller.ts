@@ -9,6 +9,7 @@ import { Voucher } from '../voucher/entities/voucher.entity';
 import { Shop } from '../shop/entities/shop.entity';
 import { ProductQuery } from './dto/product-query.dto';
 import { ShopQuery } from '../shop/dto/shop-query.dto';
+import { VoucherQueryDto } from '../voucher/dto/voucher-query.dto';
 
 export interface PaginatedResult<T> {
   count: number;
@@ -59,9 +60,18 @@ export class SearchController {
   }
 
   @Get('vouchers')
-  async vouchers(): Promise<Response<Voucher[]>> {
+  async vouchers(
+    @Query() query: VoucherQueryDto,
+  ): Promise<Response<PaginatedResult<Voucher>>> {
+    const { count, vouchers } = await this.voucherService.findAllPaginated(
+      query,
+    );
+
     return {
-      data: await this.voucherService.findAll(),
+      data: {
+        count,
+        results: vouchers,
+      },
     };
   }
 }

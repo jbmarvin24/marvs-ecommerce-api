@@ -4,6 +4,7 @@ import { UpdateVoucherDto } from './dto/update-voucher.dto';
 import { Voucher } from './entities/voucher.entity';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
+import { VoucherQueryDto } from './dto/voucher-query.dto';
 
 @Injectable()
 export class VoucherService {
@@ -16,8 +17,22 @@ export class VoucherService {
     return await this.voucherRepository.save(new Voucher(createVoucherDto));
   }
 
-  async findAll(): Promise<Voucher[]> {
-    return await this.voucherRepository.find();
+  async findAllPaginated(q: VoucherQueryDto) {
+    const { pageSize = 10, page = 1 } = q;
+
+    const qb = this.voucherRepository.createQueryBuilder('v');
+
+    const vouchers = await qb
+      .limit(pageSize)
+      .offset((page - 1) * pageSize)
+      .getMany();
+
+    const count = await qb.getCount();
+
+    return {
+      count,
+      vouchers,
+    };
   }
 
   async findOne(id: number): Promise<Voucher> {
