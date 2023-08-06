@@ -5,6 +5,7 @@ import { Voucher } from './entities/voucher.entity';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { VoucherQueryDto } from './dto/voucher-query.dto';
+import { paginate } from '../lib/paginator.lib';
 
 @Injectable()
 export class VoucherService {
@@ -18,21 +19,13 @@ export class VoucherService {
   }
 
   async findAllPaginated(q: VoucherQueryDto) {
-    const { pageSize = 10, page = 1 } = q;
+    const { pageSize, page } = q;
 
     const qb = this.voucherRepository.createQueryBuilder('v');
 
-    const vouchers = await qb
-      .limit(pageSize)
-      .offset((page - 1) * pageSize)
-      .getMany();
+    const paginationResult = paginate(qb, page, pageSize);
 
-    const count = await qb.getCount();
-
-    return {
-      count,
-      vouchers,
-    };
+    return paginationResult;
   }
 
   async findOne(id: number): Promise<Voucher> {

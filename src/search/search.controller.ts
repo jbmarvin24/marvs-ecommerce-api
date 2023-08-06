@@ -10,11 +10,7 @@ import { Shop } from '../shop/entities/shop.entity';
 import { ProductQueryDto } from '../product/dto/product-query.dto';
 import { ShopQueryDto } from '../shop/dto/shop-query.dto';
 import { VoucherQueryDto } from '../voucher/dto/voucher-query.dto';
-
-export interface PaginatedResult<T> {
-  count: number;
-  results: T[];
-}
+import { PaginatedResult } from '../lib/paginator.lib';
 
 @Public()
 @Controller('search')
@@ -29,17 +25,8 @@ export class SearchController {
   async products(
     @Query() query: ProductQueryDto,
   ): Promise<Response<PaginatedResult<Product>>> {
-    console.log(query);
-
-    const { count, products } = await this.productService.findAllPaginated(
-      query,
-    );
-
     return {
-      data: {
-        count,
-        results: products,
-      },
+      data: await this.productService.findAllPaginated(query),
     };
   }
 
@@ -47,15 +34,8 @@ export class SearchController {
   async shops(
     @Query() query: ShopQueryDto,
   ): Promise<Response<PaginatedResult<Shop>>> {
-    console.log(query);
-
-    const { count, shops } = await this.shopService.findAllPaginated(query);
-
     return {
-      data: {
-        count,
-        results: shops,
-      },
+      data: await this.shopService.findAllPaginated(query),
     };
   }
 
@@ -63,15 +43,8 @@ export class SearchController {
   async vouchers(
     @Query() query: VoucherQueryDto,
   ): Promise<Response<PaginatedResult<Voucher>>> {
-    const { count, vouchers } = await this.voucherService.findAllPaginated(
-      query,
-    );
-
     return {
-      data: {
-        count,
-        results: vouchers,
-      },
+      data: await this.voucherService.findAllPaginated(query),
     };
   }
 }

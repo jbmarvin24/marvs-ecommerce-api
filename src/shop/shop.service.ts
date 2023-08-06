@@ -9,6 +9,7 @@ import { Repository } from 'typeorm';
 import { Shop } from './entities/shop.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ShopQueryDto } from './dto/shop-query.dto';
+import { paginate } from '../lib/paginator.lib';
 
 @Injectable()
 export class ShopService {
@@ -24,7 +25,7 @@ export class ShopService {
   }
 
   async findAllPaginated(q: ShopQueryDto) {
-    const { pageSize = 10, page = 1, name } = q;
+    const { pageSize, page, name } = q;
 
     const qb = this.shopRepository.createQueryBuilder('s');
 
@@ -33,17 +34,9 @@ export class ShopService {
         name: `%${name.toLowerCase()}%`,
       });
 
-    const shops = await qb
-      .limit(pageSize)
-      .offset((page - 1) * pageSize)
-      .getMany();
+    const paginateResult = await paginate(qb, page, pageSize);
 
-    const count = await qb.getCount();
-
-    return {
-      count,
-      shops,
-    };
+    return paginateResult;
   }
 
   async findOne(id: number): Promise<Shop> {

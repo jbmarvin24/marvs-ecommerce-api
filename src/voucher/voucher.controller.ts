@@ -16,7 +16,7 @@ import { Admin } from '../auth/decorators/admin.decorator';
 import { Response } from '../interceptors/transform-response.interceptor';
 import { Voucher } from './entities/voucher.entity';
 import { VoucherQueryDto } from './dto/voucher-query.dto';
-import { PaginatedResult } from '../search/search.controller';
+import { PaginatedResult } from '../lib/paginator.lib';
 
 @Controller('voucher')
 export class VoucherController {
@@ -37,15 +37,8 @@ export class VoucherController {
   async findAll(
     @Query() query: VoucherQueryDto,
   ): Promise<Response<PaginatedResult<Voucher>>> {
-    const { count, vouchers } = await this.voucherService.findAllPaginated(
-      query,
-    );
-
     return {
-      data: {
-        count,
-        results: vouchers,
-      },
+      data: await this.voucherService.findAllPaginated(query),
     };
   }
 
