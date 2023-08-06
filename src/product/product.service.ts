@@ -43,9 +43,7 @@ export class ProductService {
     if (priceMin) qb.andWhere('p.price >= :priceMin', { priceMin });
     if (priceMax) qb.andWhere('p.price <= :priceMax', { priceMax });
 
-    const paginationResult = await paginate(qb, page, pageSize);
-
-    return paginationResult;
+    return await paginate(qb, page, pageSize);
   }
 
   async findAllByShopId(shopId: number) {

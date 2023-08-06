@@ -23,9 +23,7 @@ export class VoucherService {
 
     const qb = this.voucherRepository.createQueryBuilder('v');
 
-    const paginationResult = paginate(qb, page, pageSize);
-
-    return paginationResult;
+    return await paginate(qb, page, pageSize);
   }
 
   async findOne(id: number): Promise<Voucher> {

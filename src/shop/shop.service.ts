@@ -34,9 +34,7 @@ export class ShopService {
         name: `%${name.toLowerCase()}%`,
       });
 
-    const paginateResult = await paginate(qb, page, pageSize);
-
-    return paginateResult;
+    return await paginate(qb, page, pageSize);
   }
 
   async findOne(id: number): Promise<Shop> {
