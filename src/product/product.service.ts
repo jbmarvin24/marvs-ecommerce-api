@@ -6,7 +6,7 @@ import { Product } from './entities/product.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ShopService } from '../shop/shop.service';
 import { ProductQueryDto } from './dto/product-query.dto';
-import { paginate } from '../lib/paginator.lib';
+import { paginate } from '../lib//pagination/paginator.lib';
 
 @Injectable()
 export class ProductService {

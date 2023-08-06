@@ -5,7 +5,7 @@ import { Voucher } from './entities/voucher.entity';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { VoucherQueryDto } from './dto/voucher-query.dto';
-import { paginate } from '../lib/paginator.lib';
+import { paginate } from '../lib/pagination/paginator.lib';
 
 @Injectable()
 export class VoucherService {

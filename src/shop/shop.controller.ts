@@ -17,7 +17,7 @@ import { User } from '../user/entities/user.entity';
 import { Response } from '../interceptors/transform-response.interceptor';
 import { Shop } from './entities/shop.entity';
 import { ShopQueryDto } from './dto/shop-query.dto';
-import { PaginatedResult } from '../lib/paginator.lib';
+import { PaginatedResult } from '../lib/pagination/paginator.lib';
 
 @Controller('shop')
 export class ShopController {

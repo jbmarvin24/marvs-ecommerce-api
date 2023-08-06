@@ -10,7 +10,7 @@ import { Shop } from '../shop/entities/shop.entity';
 import { ProductQueryDto } from '../product/dto/product-query.dto';
 import { ShopQueryDto } from '../shop/dto/shop-query.dto';
 import { VoucherQueryDto } from '../voucher/dto/voucher-query.dto';
-import { PaginatedResult } from '../lib/paginator.lib';
+import { PaginatedResult } from '../lib/pagination/paginator.lib';
 
 @Public()
 @Controller('search')

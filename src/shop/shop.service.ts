@@ -9,7 +9,7 @@ import { Repository } from 'typeorm';
 import { Shop } from './entities/shop.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ShopQueryDto } from './dto/shop-query.dto';
-import { paginate } from '../lib/paginator.lib';
+import { paginate } from '../lib/pagination/paginator.lib';
 
 @Injectable()
 export class ShopService {

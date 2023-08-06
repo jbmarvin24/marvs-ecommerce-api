@@ -16,7 +16,7 @@ import { Admin } from '../auth/decorators/admin.decorator';
 import { Response } from '../interceptors/transform-response.interceptor';
 import { Voucher } from './entities/voucher.entity';
 import { VoucherQueryDto } from './dto/voucher-query.dto';
-import { PaginatedResult } from '../lib/paginator.lib';
+import { PaginatedResult } from '../lib/pagination/paginator.lib';
 
 @Controller('voucher')
 export class VoucherController {

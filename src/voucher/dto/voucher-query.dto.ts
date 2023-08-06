@@ -1,11 +1,3 @@
-import { IsNumberString, IsOptional } from 'class-validator';
+import { PaginateQueryDto } from '../../lib/pagination/paginate-query.dto.lib';
 
-export class VoucherQueryDto {
-  @IsNumberString()
-  @IsOptional()
-  page?: number;
-
-  @IsNumberString()
-  @IsOptional()
-  pageSize?: number;
-}
+export class VoucherQueryDto extends PaginateQueryDto {}
