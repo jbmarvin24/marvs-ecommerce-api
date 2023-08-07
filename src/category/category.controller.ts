@@ -7,6 +7,7 @@ import {
   Param,
   Delete,
   ParseIntPipe,
+  Query,
 } from '@nestjs/common';
 import { CategoryService } from './category.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
@@ -14,6 +15,8 @@ import { UpdateCategoryDto } from './dto/update-category.dto';
 import { Admin } from '../auth/decorators/admin.decorator';
 import { Response } from '../interceptors/transform-response.interceptor';
 import { Category } from './entities/category.entity';
+import { CategoryQueryDto } from './dto/category-query.dto';
+import { PaginatedResult } from '../lib/pagination/paginator.lib';
 
 @Controller('category')
 export class CategoryController {
@@ -31,10 +34,11 @@ export class CategoryController {
   }
 
   @Get()
-  async findAll(): Promise<Response<Category[]>> {
-    // TODO: Pagination
+  async findAll(
+    @Query() query: CategoryQueryDto,
+  ): Promise<Response<PaginatedResult<Category>>> {
     return {
-      data: await this.categoryService.findAll(),
+      data: await this.categoryService.findAllPaginated(query),
     };
   }
 
