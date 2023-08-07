@@ -2,6 +2,8 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { Wishlist } from './entities/wishlist.entity';
 import { InjectRepository } from '@nestjs/typeorm';
+import { WishlistQueryDto } from './dto/wishlist-query.dto';
+import { paginate } from '../lib/pagination/paginator.lib';
 
 @Injectable()
 export class WishlistService {
@@ -25,15 +27,15 @@ export class WishlistService {
     });
   }
 
-  async findAllbyUser(userId: number) {
-    return await this.wishlistRepository.find({
-      where: {
-        userId,
-      },
-      relations: {
-        product: true,
-      },
-    });
+  async findAllbyUser(userId: number, q: WishlistQueryDto) {
+    const { page, pageSize } = q;
+
+    const qb = this.wishlistRepository.createQueryBuilder('w');
+
+    qb.leftJoinAndSelect('w.product', 'p');
+    qb.where('w.userId = :userId', { userId });
+
+    return await paginate(qb, page, pageSize);
   }
 
   async remove(userId: number, productId: number) {

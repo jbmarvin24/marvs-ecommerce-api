@@ -8,6 +8,7 @@ import {
   ParseIntPipe,
   HttpCode,
   HttpStatus,
+  Query,
 } from '@nestjs/common';
 import { WishlistService } from './wishlist.service';
 import { CreateWishlistDto } from './dto/create-wishlist.dto';
@@ -16,6 +17,8 @@ import { User } from '../user/entities/user.entity';
 import { Response } from '../interceptors/transform-response.interceptor';
 import { Wishlist } from './entities/wishlist.entity';
 import { ProductService } from '../product/product.service';
+import { WishlistQueryDto } from './dto/wishlist-query.dto';
+import { PaginatedResult } from '../lib/pagination/paginator.lib';
 
 @Controller('user/me/wishlist')
 export class WishlistController {
@@ -41,9 +44,12 @@ export class WishlistController {
   }
 
   @Get()
-  async findAll(@CurrentUser() user: User): Promise<Response<Wishlist[]>> {
+  async findAll(
+    @Query() query: WishlistQueryDto,
+    @CurrentUser() user: User,
+  ): Promise<Response<PaginatedResult<Wishlist>>> {
     return {
-      data: await this.wishlistService.findAllbyUser(user.id),
+      data: await this.wishlistService.findAllbyUser(user.id, query),
     };
   }
 
