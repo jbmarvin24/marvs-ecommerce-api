@@ -4,6 +4,8 @@ import { UpdateVoucherTypeDto } from './dto/update-voucher-type.dto';
 import { Repository } from 'typeorm';
 import { VoucherType } from './entities/voucher-type.entity';
 import { InjectRepository } from '@nestjs/typeorm';
+import { VoucherTypeQueryDto } from './dto/voucher-type-query.dto';
+import { paginate } from '../lib/pagination/paginator.lib';
 
 @Injectable()
 export class VoucherTypeService {
@@ -20,8 +22,17 @@ export class VoucherTypeService {
     );
   }
 
-  async findAll(): Promise<VoucherType[]> {
-    return await this.voucherTypeRepository.find();
+  async findAllPaginated(q: VoucherTypeQueryDto) {
+    const { page, pageSize, name } = q;
+
+    const qb = this.voucherTypeRepository.createQueryBuilder('p');
+
+    if (name)
+      qb.andWhere('LOWER(p.name) LIKE :name', {
+        name: `%${name.toLowerCase()}%`,
+      });
+
+    return await paginate(qb, page, pageSize);
   }
 
   async findOne(id: number): Promise<VoucherType> {

@@ -7,6 +7,7 @@ import {
   Param,
   Delete,
   ParseIntPipe,
+  Query,
 } from '@nestjs/common';
 import { VoucherTypeService } from './voucher-type.service';
 import { CreateVoucherTypeDto } from './dto/create-voucher-type.dto';
@@ -14,6 +15,8 @@ import { UpdateVoucherTypeDto } from './dto/update-voucher-type.dto';
 import { Admin } from '../auth/decorators/admin.decorator';
 import { Response } from '../interceptors/transform-response.interceptor';
 import { VoucherType } from './entities/voucher-type.entity';
+import { VoucherTypeQueryDto } from './dto/voucher-type-query.dto';
+import { PaginatedResult } from '../lib/pagination/paginator.lib';
 
 @Controller('voucher-type')
 export class VoucherTypeController {
@@ -31,9 +34,11 @@ export class VoucherTypeController {
   }
 
   @Get()
-  async findAll(): Promise<Response<VoucherType[]>> {
+  async findAll(
+    @Query() query: VoucherTypeQueryDto,
+  ): Promise<Response<PaginatedResult<VoucherType>>> {
     return {
-      data: await this.voucherTypeService.findAll(),
+      data: await this.voucherTypeService.findAllPaginated(query),
     };
   }
 
