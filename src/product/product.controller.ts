@@ -7,6 +7,7 @@ import {
   Param,
   Delete,
   ParseIntPipe,
+  Query,
 } from '@nestjs/common';
 import { ProductService } from './product.service';
 import { CreateProductDto } from './dto/create-product.dto';
@@ -15,6 +16,8 @@ import { CurrentUser } from '../user/decorators/current-user.decorator';
 import { User } from '../user/entities/user.entity';
 import { Response } from '../interceptors/transform-response.interceptor';
 import { Product } from './entities/product.entity';
+import { ProductQueryDto } from './dto/product-query.dto';
+import { PaginatedResult } from '../lib/pagination/paginator.lib';
 
 @Controller('shop/:shopId/product')
 export class ProductController {
@@ -35,9 +38,10 @@ export class ProductController {
   @Get()
   async findAll(
     @Param('shopId', ParseIntPipe) shopId: number,
-  ): Promise<Response<Product[]>> {
+    @Query() query: ProductQueryDto,
+  ): Promise<Response<PaginatedResult<Product>>> {
     return {
-      data: await this.productService.findAllByShopId(shopId),
+      data: await this.productService.findAllPaginated(query, shopId),
     };
   }
 
