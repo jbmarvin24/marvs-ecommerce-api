@@ -9,6 +9,7 @@ import {
   SerializeOptions,
   UseInterceptors,
   ClassSerializerInterceptor,
+  Query,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -17,8 +18,9 @@ import { User } from './entities/user.entity';
 import { Admin } from '../auth/decorators/admin.decorator';
 import { ShopService } from '../shop/shop.service';
 import { Response } from '../interceptors/transform-response.interceptor';
-import { UserDto } from './dto/user.dto';
+import { UserDto, UserPaginatedResponse } from './dto/user.dto';
 import { Shop } from '../shop/entities/shop.entity';
+import { UserQueryDto } from './dto/user-query.dto';
 
 @Controller('user')
 @SerializeOptions({ strategy: 'excludeAll' })
@@ -39,9 +41,9 @@ export class UserController {
   @UseInterceptors(ClassSerializerInterceptor)
   @Admin()
   @Get()
-  async findAll(): Promise<Response<User[]>> {
-    return new UserDto({
-      data: await this.userService.findAll(),
+  async findAll(@Query() query: UserQueryDto): Promise<UserPaginatedResponse> {
+    return new UserPaginatedResponse({
+      data: await this.userService.findAllPaginated(query),
     });
   }
 

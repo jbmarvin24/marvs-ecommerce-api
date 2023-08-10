@@ -4,6 +4,8 @@ import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Profile } from '../profile/entities/profile.entity';
+import { UserQueryDto } from './dto/user-query.dto';
+import { paginate } from '../lib/pagination/paginator.lib';
 
 @Injectable()
 export class UserService {
@@ -28,10 +30,12 @@ export class UserService {
     return createdUser;
   }
 
-  async findAll(): Promise<User[]> {
-    // TODO: Pagination
+  async findAllPaginated(q: UserQueryDto) {
+    const { page, pageSize } = q;
 
-    return await this.userRepository.find();
+    const qb = this.userRepository.createQueryBuilder('p');
+
+    return await paginate(qb, page, pageSize);
   }
 
   async findOne(id: number): Promise<User> {
