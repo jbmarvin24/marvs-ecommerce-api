@@ -1,17 +1,28 @@
 import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { LoginDto } from './dto/login.dto';
+import { LoginDto, LoginTokenDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
 import { Public } from './decorators/public.decorator';
 import { ChangePasswordDto } from './dto/change-password.dto';
 import { CurrentUser } from '../user/decorators/current-user.decorator';
 import { User } from '../user/entities/user.entity';
 import { Response } from '../interceptors/transform-response.interceptor';
+import {
+  ApiOperation,
+  ApiTags,
+  ApiUnauthorizedResponse,
+  ApiBadRequestResponse,
+} from '@nestjs/swagger';
+import { ApiStandardResponse } from './decorators/success-response.decorator';
 
+@ApiTags('Authentications')
 @Controller('/auth')
 export class AuthContoller {
   constructor(private authService: AuthService) {}
 
+  @ApiOperation({ summary: 'User login' })
+  @ApiStandardResponse(LoginTokenDto)
+  @ApiUnauthorizedResponse({ description: 'Invalid email or password' })
   @Public()
   @HttpCode(HttpStatus.OK)
   @Post('/login')
@@ -29,6 +40,9 @@ export class AuthContoller {
     };
   }
 
+  @ApiOperation({ summary: 'User registration' })
+  @ApiStandardResponse()
+  @ApiBadRequestResponse({ description: 'Invalid inputs.' })
   @Public()
   @HttpCode(HttpStatus.OK)
   @Post('/register')
@@ -42,6 +56,12 @@ export class AuthContoller {
     };
   }
 
+  @ApiOperation({ summary: 'Changing of user password' })
+  @ApiStandardResponse()
+  @ApiBadRequestResponse({
+    description:
+      'The Old Password does not match or new password is the same with the old password',
+  })
   @HttpCode(HttpStatus.OK)
   @Post('/change-password')
   async changePassword(
