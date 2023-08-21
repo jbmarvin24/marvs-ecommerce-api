@@ -28,12 +28,13 @@ export class ProductService {
   }
 
   async findAllPaginated(q: ProductQueryDto, shopId: number | null = null) {
-    const { page, pageSize, brand, name, priceMax, priceMin } = q;
+    const { page, pageSize, brand, name, priceMax, priceMin, sort } = q;
 
     const qb = this.productRepository.createQueryBuilder('p');
 
     if (shopId) qb.andWhere('p.shopId = :shopId', { shopId });
 
+    // Filter
     if (name)
       qb.andWhere('LOWER(p.name) LIKE :name', {
         name: `%${name.toLowerCase()}%`,
@@ -44,6 +45,17 @@ export class ProductService {
       });
     if (priceMin) qb.andWhere('p.price >= :priceMin', { priceMin });
     if (priceMax) qb.andWhere('p.price <= :priceMax', { priceMax });
+
+    // Sort
+
+    if (sort) {
+      if (sort.includes('-')) {
+        const field = sort.split('-')[1];
+        qb.orderBy(field, 'DESC');
+      } else {
+        qb.orderBy(sort, 'ASC');
+      }
+    }
 
     return await paginate(qb, page, pageSize);
   }
