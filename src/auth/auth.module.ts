@@ -11,11 +11,12 @@ import { AdminGuard } from './guards/admin.guard';
 @Module({
   imports: [
     UserModule,
-    JwtModule.register({
-      global: true,
-      // TODO: Move to config file
-      secret: 'jwtMySecret',
-      signOptions: { expiresIn: '24h' },
+    JwtModule.registerAsync({
+      useFactory: () => ({
+        global: true,
+        secret: process.env.AUTH_SECRET,
+        signOptions: { expiresIn: '24h' },
+      }),
     }),
   ],
   providers: [
