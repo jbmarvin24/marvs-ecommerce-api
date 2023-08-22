@@ -10,16 +10,12 @@ export const ApiStandardResponse = <TModel extends Type<any>>(
     ApiOkResponse({
       description: 'Success operation',
       schema: {
-        allOf: [
-          {
-            $ref: getSchemaPath(SuccessResponse),
-            properties: {
-              data: {
-                $ref: getSchemaPath(model),
-              },
-            },
+        $ref: getSchemaPath(SuccessResponse),
+        properties: {
+          data: {
+            $ref: getSchemaPath(model),
           },
-        ],
+        },
       },
     }),
   );

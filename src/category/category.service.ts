@@ -42,9 +42,7 @@ export class CategoryService {
   }
 
   async findOne(id: number): Promise<Category | null> {
-    return await this.categoryRepository.findOneBy({
-      id,
-    });
+    return await this.findOneOrThrow(id);
   }
 
   async update(
@@ -97,7 +95,9 @@ export class CategoryService {
   }
 
   async findOneOrThrow(id: number) {
-    const category = await this.findOne(id);
+    const category = await this.categoryRepository.findOneBy({
+      id,
+    });
 
     if (!category) throw new NotFoundException('Category not found.');
 

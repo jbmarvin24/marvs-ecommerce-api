@@ -1,7 +1,16 @@
+import { ApiProperty } from '@nestjs/swagger';
 import { SelectQueryBuilder } from 'typeorm';
 
 export interface PaginatedResult<T> {
   count: number;
+  results: T[];
+}
+
+export class PaginatedResponse<T> implements PaginatedResult<T> {
+  @ApiProperty()
+  count: number;
+
+  @ApiProperty()
   results: T[];
 }
 

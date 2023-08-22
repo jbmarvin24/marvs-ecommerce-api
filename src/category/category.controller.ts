@@ -17,11 +17,30 @@ import { Response } from '../interceptors/transform-response.interceptor';
 import { Category } from './entities/category.entity';
 import { CategoryQueryDto } from './dto/category-query.dto';
 import { PaginatedResult } from '../lib/pagination/paginator.lib';
+import {
+  ApiBadRequestResponse,
+  ApiBearerAuth,
+  ApiNotFoundResponse,
+  ApiOperation,
+  ApiParam,
+  ApiTags,
+  ApiUnauthorizedResponse,
+} from '@nestjs/swagger';
+import { ApiStandardResponse } from '../auth/decorators/success-response.decorator';
+import { ApiCreatedResponseCustom } from '../auth/decorators/created-response.decorator';
+import { ApiPaginatedResponse } from '../auth/decorators/paginated-response.decorator';
+import { Public } from '../auth/decorators/public.decorator';
 
+@ApiTags('Category')
 @Controller('category')
 export class CategoryController {
   constructor(private readonly categoryService: CategoryService) {}
 
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Create a category' })
+  @ApiCreatedResponseCustom(Category)
+  @ApiBadRequestResponse({ description: 'Invalid inputs' })
+  @ApiUnauthorizedResponse({ description: 'Authentication is required' })
   @Admin()
   @Post()
   async create(
@@ -33,6 +52,9 @@ export class CategoryController {
     };
   }
 
+  @ApiOperation({ summary: 'Get all categories' })
+  @ApiPaginatedResponse(Category)
+  @Public()
   @Get()
   async findAll(
     @Query() query: CategoryQueryDto,
@@ -42,6 +64,11 @@ export class CategoryController {
     };
   }
 
+  @ApiOperation({ summary: 'Find a category' })
+  @ApiStandardResponse(Category)
+  @ApiNotFoundResponse({ description: 'Category not found' })
+  @ApiParam({ name: 'id', description: 'Category Id', example: 1 })
+  @Public()
   @Get(':id')
   async findOne(
     @Param('id', ParseIntPipe) id: number,
@@ -51,6 +78,12 @@ export class CategoryController {
     };
   }
 
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Update a category' })
+  @ApiStandardResponse(Category)
+  @ApiNotFoundResponse({ description: 'Category not found' })
+  @ApiParam({ name: 'id', description: 'Category Id', example: 1 })
+  @ApiUnauthorizedResponse({ description: 'Authentication is required' })
   @Admin()
   @Patch(':id')
   async update(
@@ -63,6 +96,12 @@ export class CategoryController {
     };
   }
 
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Delete a category' })
+  @ApiStandardResponse()
+  @ApiNotFoundResponse({ description: 'Category not found' })
+  @ApiParam({ name: 'id', description: 'Category Id', example: 1 })
+  @ApiUnauthorizedResponse({ description: 'Authentication is required' })
   @Admin()
   @Delete(':id')
   async remove(
