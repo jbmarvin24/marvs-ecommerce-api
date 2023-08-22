@@ -6,7 +6,7 @@ import {
 } from '@nestjs/swagger';
 import { SuccessResponse } from '../interceptors/transform-response.interceptor';
 
-export const ApiCreatedResponseCustom = <TModel extends Type<any>>(
+export const ApiCreatedResponseDec = <TModel extends Type<any>>(
   model: TModel,
 ) => {
   return applyDecorators(

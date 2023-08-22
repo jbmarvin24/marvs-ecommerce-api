@@ -3,7 +3,7 @@ import { ApiExtraModels, ApiOkResponse, getSchemaPath } from '@nestjs/swagger';
 import { SuccessResponse } from '../interceptors/transform-response.interceptor';
 import { PaginatedResponse } from '../lib/pagination/paginator.lib';
 
-export const ApiPaginatedResponse = <TModel extends Type<any>>(
+export const ApiPaginatedResponseDec = <TModel extends Type<any>>(
   model?: TModel,
 ) => {
   return applyDecorators(

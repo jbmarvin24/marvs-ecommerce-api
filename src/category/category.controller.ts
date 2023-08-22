@@ -27,8 +27,8 @@ import {
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { ApiSuccessResponseDec } from '../decorators/success-response.decorator';
-import { ApiCreatedResponseCustom } from '../decorators/created-response.decorator';
-import { ApiPaginatedResponse } from '../decorators/paginated-response.decorator';
+import { ApiCreatedResponseDec } from '../decorators/created-response.decorator';
+import { ApiPaginatedResponseDec } from '../decorators/paginated-response.decorator';
 import { Public } from '../auth/decorators/public.decorator';
 
 @ApiTags('Category')
@@ -38,7 +38,7 @@ export class CategoryController {
 
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Create a category' })
-  @ApiCreatedResponseCustom(Category)
+  @ApiCreatedResponseDec(Category)
   @ApiBadRequestResponse({ description: 'Invalid inputs' })
   @ApiUnauthorizedResponse({ description: 'Authentication is required' })
   @Admin()
@@ -53,7 +53,7 @@ export class CategoryController {
   }
 
   @ApiOperation({ summary: 'Get all categories' })
-  @ApiPaginatedResponse(Category)
+  @ApiPaginatedResponseDec(Category)
   @Public()
   @Get()
   async findAll(
