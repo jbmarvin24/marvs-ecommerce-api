@@ -13,7 +13,7 @@ import {
   ApiUnauthorizedResponse,
   ApiBadRequestResponse,
 } from '@nestjs/swagger';
-import { ApiStandardResponse } from './decorators/success-response.decorator';
+import { ApiStandardResponse } from '../decorators/success-response.decorator';
 
 @ApiTags('Authentications')
 @Controller('/auth')

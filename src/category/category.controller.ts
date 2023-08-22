@@ -26,9 +26,9 @@ import {
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
-import { ApiStandardResponse } from '../auth/decorators/success-response.decorator';
-import { ApiCreatedResponseCustom } from '../auth/decorators/created-response.decorator';
-import { ApiPaginatedResponse } from '../auth/decorators/paginated-response.decorator';
+import { ApiStandardResponse } from '../decorators/success-response.decorator';
+import { ApiCreatedResponseCustom } from '../decorators/created-response.decorator';
+import { ApiPaginatedResponse } from '../decorators/paginated-response.decorator';
 import { Public } from '../auth/decorators/public.decorator';
 
 @ApiTags('Category')

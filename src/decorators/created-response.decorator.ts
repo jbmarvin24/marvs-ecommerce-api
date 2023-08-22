@@ -4,7 +4,7 @@ import {
   ApiCreatedResponse,
   getSchemaPath,
 } from '@nestjs/swagger';
-import { SuccessResponse } from '../../interceptors/transform-response.interceptor';
+import { SuccessResponse } from '../interceptors/transform-response.interceptor';
 
 export const ApiCreatedResponseCustom = <TModel extends Type<any>>(
   model: TModel,
