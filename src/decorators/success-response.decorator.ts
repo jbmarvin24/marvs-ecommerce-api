@@ -2,7 +2,7 @@ import { Type, applyDecorators } from '@nestjs/common';
 import { ApiExtraModels, ApiOkResponse, getSchemaPath } from '@nestjs/swagger';
 import { SuccessResponse } from '../interceptors/transform-response.interceptor';
 
-export const ApiStandardResponse = <TModel extends Type<any>>(
+export const ApiSuccessResponseDec = <TModel extends Type<any>>(
   model?: TModel,
 ) => {
   return applyDecorators(

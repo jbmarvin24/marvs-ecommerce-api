@@ -13,7 +13,7 @@ import {
   ApiUnauthorizedResponse,
   ApiBadRequestResponse,
 } from '@nestjs/swagger';
-import { ApiStandardResponse } from '../decorators/success-response.decorator';
+import { ApiSuccessResponseDec } from '../decorators/success-response.decorator';
 
 @ApiTags('Authentications')
 @Controller('/auth')
@@ -21,7 +21,7 @@ export class AuthContoller {
   constructor(private authService: AuthService) {}
 
   @ApiOperation({ summary: 'User login' })
-  @ApiStandardResponse(LoginTokenDto)
+  @ApiSuccessResponseDec(LoginTokenDto)
   @ApiUnauthorizedResponse({ description: 'Invalid email or password' })
   @Public()
   @HttpCode(HttpStatus.OK)
@@ -41,7 +41,7 @@ export class AuthContoller {
   }
 
   @ApiOperation({ summary: 'User registration' })
-  @ApiStandardResponse()
+  @ApiSuccessResponseDec()
   @ApiBadRequestResponse({ description: 'Invalid inputs.' })
   @Public()
   @HttpCode(HttpStatus.OK)
@@ -57,7 +57,7 @@ export class AuthContoller {
   }
 
   @ApiOperation({ summary: 'Changing of user password' })
-  @ApiStandardResponse()
+  @ApiSuccessResponseDec()
   @ApiBadRequestResponse({
     description:
       'The Old Password does not match or new password is the same with the old password',

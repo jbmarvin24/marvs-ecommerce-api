@@ -26,7 +26,7 @@ import {
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
-import { ApiStandardResponse } from '../decorators/success-response.decorator';
+import { ApiSuccessResponseDec } from '../decorators/success-response.decorator';
 import { ApiCreatedResponseCustom } from '../decorators/created-response.decorator';
 import { ApiPaginatedResponse } from '../decorators/paginated-response.decorator';
 import { Public } from '../auth/decorators/public.decorator';
@@ -65,7 +65,7 @@ export class CategoryController {
   }
 
   @ApiOperation({ summary: 'Find a category' })
-  @ApiStandardResponse(Category)
+  @ApiSuccessResponseDec(Category)
   @ApiNotFoundResponse({ description: 'Category not found' })
   @ApiParam({ name: 'id', description: 'Category Id', example: 1 })
   @Public()
@@ -80,7 +80,7 @@ export class CategoryController {
 
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Update a category' })
-  @ApiStandardResponse(Category)
+  @ApiSuccessResponseDec(Category)
   @ApiNotFoundResponse({ description: 'Category not found' })
   @ApiParam({ name: 'id', description: 'Category Id', example: 1 })
   @ApiUnauthorizedResponse({ description: 'Authentication is required' })
@@ -98,7 +98,7 @@ export class CategoryController {
 
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Delete a category' })
-  @ApiStandardResponse()
+  @ApiSuccessResponseDec()
   @ApiNotFoundResponse({ description: 'Category not found' })
   @ApiParam({ name: 'id', description: 'Category Id', example: 1 })
   @ApiUnauthorizedResponse({ description: 'Authentication is required' })
