@@ -11,8 +11,8 @@ export const ApiStandardResponse = <TModel extends Type<any>>(
       description: 'Success operation',
       schema: {
         allOf: [
-          { $ref: getSchemaPath(SuccessResponse) },
           {
+            $ref: getSchemaPath(SuccessResponse),
             properties: {
               data: {
                 $ref: getSchemaPath(model),
