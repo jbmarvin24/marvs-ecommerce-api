@@ -20,6 +20,7 @@ import { PaginatedResult } from '../lib/pagination/paginator.lib';
 import {
   ApiBadRequestResponse,
   ApiBearerAuth,
+  ApiForbiddenResponse,
   ApiNotFoundResponse,
   ApiOperation,
   ApiParam,
@@ -46,6 +47,10 @@ export class CategoryController {
   })
   @ApiUnauthorizedResponse({
     description: 'Authentication is required',
+    type: ExceptionResponse,
+  })
+  @ApiForbiddenResponse({
+    description: 'Access to resource is not allowed',
     type: ExceptionResponse,
   })
   @Admin()
@@ -99,6 +104,10 @@ export class CategoryController {
     description: 'Authentication is required',
     type: ExceptionResponse,
   })
+  @ApiForbiddenResponse({
+    description: 'Access to resource is not allowed',
+    type: ExceptionResponse,
+  })
   @ApiParam({ name: 'id', description: 'Category Id', example: 1 })
   @Admin()
   @Patch(':id')
@@ -121,6 +130,10 @@ export class CategoryController {
   })
   @ApiUnauthorizedResponse({
     description: 'Authentication is required',
+    type: ExceptionResponse,
+  })
+  @ApiForbiddenResponse({
+    description: 'Access to resource is not allowed',
     type: ExceptionResponse,
   })
   @ApiParam({ name: 'id', description: 'Category Id', example: 1 })
