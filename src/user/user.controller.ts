@@ -17,7 +17,7 @@ import { CurrentUser } from './decorators/current-user.decorator';
 import { User } from './entities/user.entity';
 import { Admin } from '../auth/decorators/admin.decorator';
 import { ShopService } from '../shop/shop.service';
-import { Response } from '../interceptors/transform-response.interceptor';
+import { ISuccessResponse } from '../interceptors/transform-response.interceptor';
 import { UserDto, UserPaginatedResponse } from './dto/user.dto';
 import { Shop } from '../shop/entities/shop.entity';
 import { UserQueryDto } from './dto/user-query.dto';
@@ -32,7 +32,7 @@ export class UserController {
 
   @UseInterceptors(ClassSerializerInterceptor)
   @Get('me')
-  me(@CurrentUser() user: User): Response<User> {
+  me(@CurrentUser() user: User): ISuccessResponse<User> {
     return new UserDto({
       data: user,
     });
@@ -52,7 +52,7 @@ export class UserController {
   @Admin()
   async findOne(
     @Param('id', ParseIntPipe) id: number,
-  ): Promise<Response<User>> {
+  ): Promise<ISuccessResponse<User>> {
     return new UserDto({
       data: await this.userService.findOneOrThrow(id),
     });
@@ -64,7 +64,7 @@ export class UserController {
   async update(
     @Param('id', ParseIntPipe) id: number,
     @Body() updateUserDto: UpdateUserDto,
-  ): Promise<Response<User>> {
+  ): Promise<ISuccessResponse<User>> {
     return new UserDto({
       data: await this.userService.update(id, updateUserDto),
       message: 'Successfully updated.',
@@ -76,7 +76,7 @@ export class UserController {
   @Delete(':id')
   async remove(
     @Param('id', ParseIntPipe) id: number,
-  ): Promise<Response<undefined>> {
+  ): Promise<ISuccessResponse<undefined>> {
     await this.userService.remove(id);
 
     return new UserDto({
@@ -85,7 +85,7 @@ export class UserController {
   }
 
   @Get('me/shops')
-  async shops(@CurrentUser() user: User): Promise<Response<Shop[]>> {
+  async shops(@CurrentUser() user: User): Promise<ISuccessResponse<Shop[]>> {
     return {
       data: await this.shopService.findByUser(user.id),
     };

@@ -3,7 +3,7 @@ import { Public } from '../auth/decorators/public.decorator';
 import { ProductService } from '../product/product.service';
 import { ShopService } from '../shop/shop.service';
 import { VoucherService } from '../voucher/voucher.service';
-import { Response } from '../interceptors/transform-response.interceptor';
+import { ISuccessResponse } from '../interceptors/transform-response.interceptor';
 import { Product } from '../product/entities/product.entity';
 import { Voucher } from '../voucher/entities/voucher.entity';
 import { Shop } from '../shop/entities/shop.entity';
@@ -24,7 +24,7 @@ export class SearchController {
   @Get('products')
   async products(
     @Query() query: ProductQueryDto,
-  ): Promise<Response<PaginatedResult<Product>>> {
+  ): Promise<ISuccessResponse<PaginatedResult<Product>>> {
     return {
       data: await this.productService.findAllPaginated(query),
     };
@@ -33,7 +33,7 @@ export class SearchController {
   @Get('shops')
   async shops(
     @Query() query: ShopQueryDto,
-  ): Promise<Response<PaginatedResult<Shop>>> {
+  ): Promise<ISuccessResponse<PaginatedResult<Shop>>> {
     return {
       data: await this.shopService.findAllPaginated(query),
     };
@@ -42,7 +42,7 @@ export class SearchController {
   @Get('vouchers')
   async vouchers(
     @Query() query: VoucherQueryDto,
-  ): Promise<Response<PaginatedResult<Voucher>>> {
+  ): Promise<ISuccessResponse<PaginatedResult<Voucher>>> {
     return {
       data: await this.voucherService.findAllPaginated(query),
     };

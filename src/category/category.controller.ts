@@ -13,7 +13,7 @@ import { CategoryService } from './category.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 import { Admin } from '../auth/decorators/admin.decorator';
-import { Response } from '../interceptors/transform-response.interceptor';
+import { ISuccessResponse } from '../interceptors/transform-response.interceptor';
 import { Category } from './entities/category.entity';
 import { CategoryQueryDto } from './dto/category-query.dto';
 import { PaginatedResult } from '../lib/pagination/paginator.lib';
@@ -45,7 +45,7 @@ export class CategoryController {
   @Post()
   async create(
     @Body() createCategoryDto: CreateCategoryDto,
-  ): Promise<Response<Category>> {
+  ): Promise<ISuccessResponse<Category>> {
     return {
       data: await this.categoryService.create(createCategoryDto),
       message: 'Successfully created',
@@ -58,7 +58,7 @@ export class CategoryController {
   @Get()
   async findAll(
     @Query() query: CategoryQueryDto,
-  ): Promise<Response<PaginatedResult<Category>>> {
+  ): Promise<ISuccessResponse<PaginatedResult<Category>>> {
     return {
       data: await this.categoryService.findAllPaginated(query),
     };
@@ -72,7 +72,7 @@ export class CategoryController {
   @Get(':id')
   async findOne(
     @Param('id', ParseIntPipe) id: number,
-  ): Promise<Response<Category>> {
+  ): Promise<ISuccessResponse<Category>> {
     return {
       data: await this.categoryService.findOne(id),
     };
@@ -89,7 +89,7 @@ export class CategoryController {
   async update(
     @Param('id', ParseIntPipe) id: number,
     @Body() updateCategoryDto: UpdateCategoryDto,
-  ): Promise<Response<Category>> {
+  ): Promise<ISuccessResponse<Category>> {
     return {
       data: await this.categoryService.update(id, updateCategoryDto),
       message: 'Successfully updated.',
@@ -106,7 +106,7 @@ export class CategoryController {
   @Delete(':id')
   async remove(
     @Param('id', ParseIntPipe) id: number,
-  ): Promise<Response<undefined>> {
+  ): Promise<ISuccessResponse<undefined>> {
     await this.categoryService.remove(id);
 
     return {

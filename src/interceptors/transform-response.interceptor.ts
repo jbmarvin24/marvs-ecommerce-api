@@ -8,22 +8,22 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
-export interface Response<T> {
+export interface ISuccessResponse<T> {
   statusCode?: number;
   success?: boolean;
   message?: string;
   data?: T;
 }
 
-export class SuccessResponse<T> implements Response<T> {
-  @ApiProperty({ description: 'Response status', example: 200 })
+export class SuccessResponse<T> implements ISuccessResponse<T> {
+  @ApiProperty({ description: 'Response status of the request', example: 200 })
   statusCode?: number;
 
-  @ApiProperty()
+  @ApiProperty({ description: 'If the operation is successful or not.' })
   success?: boolean;
 
   @ApiProperty({
-    description: 'Additional description of the reponse',
+    description: 'Additional description of the response',
   })
   message?: string;
 

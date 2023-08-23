@@ -14,7 +14,7 @@ import { WishlistService } from './wishlist.service';
 import { CreateWishlistDto } from './dto/create-wishlist.dto';
 import { CurrentUser } from '../user/decorators/current-user.decorator';
 import { User } from '../user/entities/user.entity';
-import { Response } from '../interceptors/transform-response.interceptor';
+import { ISuccessResponse } from '../interceptors/transform-response.interceptor';
 import { Wishlist } from './entities/wishlist.entity';
 import { ProductService } from '../product/product.service';
 import { WishlistQueryDto } from './dto/wishlist-query.dto';
@@ -32,7 +32,7 @@ export class WishlistController {
   async create(
     @Body() createWishlistDto: CreateWishlistDto,
     @CurrentUser() user: User,
-  ): Promise<Response<undefined>> {
+  ): Promise<ISuccessResponse<undefined>> {
     // Validate product existence
     await this.productService.findOneOrThrow(createWishlistDto.productId);
 
@@ -47,7 +47,7 @@ export class WishlistController {
   async findAll(
     @Query() query: WishlistQueryDto,
     @CurrentUser() user: User,
-  ): Promise<Response<PaginatedResult<Wishlist>>> {
+  ): Promise<ISuccessResponse<PaginatedResult<Wishlist>>> {
     return {
       data: await this.wishlistService.findAllbyUser(user.id, query),
     };
@@ -57,7 +57,7 @@ export class WishlistController {
   async remove(
     @Param('productId', ParseIntPipe) productId: number,
     @CurrentUser() user: User,
-  ): Promise<Response<undefined>> {
+  ): Promise<ISuccessResponse<undefined>> {
     await this.wishlistService.remove(user.id, productId);
     return {
       message: 'Successfully removed to wishlist.',

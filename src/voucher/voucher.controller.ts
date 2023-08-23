@@ -13,7 +13,7 @@ import { VoucherService } from './voucher.service';
 import { CreateVoucherDto } from './dto/create-voucher.dto';
 import { UpdateVoucherDto } from './dto/update-voucher.dto';
 import { Admin } from '../auth/decorators/admin.decorator';
-import { Response } from '../interceptors/transform-response.interceptor';
+import { ISuccessResponse } from '../interceptors/transform-response.interceptor';
 import { Voucher } from './entities/voucher.entity';
 import { VoucherQueryDto } from './dto/voucher-query.dto';
 import { PaginatedResult } from '../lib/pagination/paginator.lib';
@@ -26,7 +26,7 @@ export class VoucherController {
   @Post()
   async create(
     @Body() createVoucherDto: CreateVoucherDto,
-  ): Promise<Response<Voucher>> {
+  ): Promise<ISuccessResponse<Voucher>> {
     return {
       data: await this.voucherService.create(createVoucherDto),
       message: 'Successfully created.',
@@ -36,7 +36,7 @@ export class VoucherController {
   @Get()
   async findAll(
     @Query() query: VoucherQueryDto,
-  ): Promise<Response<PaginatedResult<Voucher>>> {
+  ): Promise<ISuccessResponse<PaginatedResult<Voucher>>> {
     return {
       data: await this.voucherService.findAllPaginated(query),
     };
@@ -45,7 +45,7 @@ export class VoucherController {
   @Get(':id')
   async findOne(
     @Param('id', ParseIntPipe) id: number,
-  ): Promise<Response<Voucher>> {
+  ): Promise<ISuccessResponse<Voucher>> {
     return {
       data: await this.voucherService.findOneOrThrow(id),
     };
@@ -56,7 +56,7 @@ export class VoucherController {
   async update(
     @Param('id', ParseIntPipe) id: number,
     @Body() updateVoucherDto: UpdateVoucherDto,
-  ): Promise<Response<Voucher>> {
+  ): Promise<ISuccessResponse<Voucher>> {
     return {
       data: await this.voucherService.update(id, updateVoucherDto),
       message: 'Successfully updated.',
@@ -67,7 +67,7 @@ export class VoucherController {
   @Delete(':id')
   async remove(
     @Param('id', ParseIntPipe) id: number,
-  ): Promise<Response<undefined>> {
+  ): Promise<ISuccessResponse<undefined>> {
     await this.voucherService.remove(id);
 
     return {

@@ -14,7 +14,7 @@ import { CreateShopDto } from './dto/create-shop.dto';
 import { UpdateShopDto } from './dto/update-shop.dto';
 import { CurrentUser } from '../user/decorators/current-user.decorator';
 import { User } from '../user/entities/user.entity';
-import { Response } from '../interceptors/transform-response.interceptor';
+import { ISuccessResponse } from '../interceptors/transform-response.interceptor';
 import { Shop } from './entities/shop.entity';
 import { ShopQueryDto } from './dto/shop-query.dto';
 import { PaginatedResult } from '../lib/pagination/paginator.lib';
@@ -27,7 +27,7 @@ export class ShopController {
   async create(
     @Body() createShopDto: CreateShopDto,
     @CurrentUser() user: User,
-  ): Promise<Response<Shop>> {
+  ): Promise<ISuccessResponse<Shop>> {
     return {
       data: await this.shopService.create(user.id, createShopDto),
       message: 'Successfully created.',
@@ -37,7 +37,7 @@ export class ShopController {
   @Get()
   async findAll(
     @Query() query: ShopQueryDto,
-  ): Promise<Response<PaginatedResult<Shop>>> {
+  ): Promise<ISuccessResponse<PaginatedResult<Shop>>> {
     return {
       data: await this.shopService.findAllPaginated(query),
     };
@@ -46,7 +46,7 @@ export class ShopController {
   @Get(':id')
   async findOne(
     @Param('id', ParseIntPipe) id: number,
-  ): Promise<Response<Shop>> {
+  ): Promise<ISuccessResponse<Shop>> {
     return {
       data: await this.shopService.findOneOrThrow(id),
     };
@@ -57,7 +57,7 @@ export class ShopController {
     @Param('id', ParseIntPipe) id: number,
     @Body() updateShopDto: UpdateShopDto,
     @CurrentUser() user: User,
-  ): Promise<Response<Shop>> {
+  ): Promise<ISuccessResponse<Shop>> {
     return {
       data: await this.shopService.update(user.id, id, updateShopDto),
       message: 'Successfully updated.',
@@ -68,7 +68,7 @@ export class ShopController {
   async remove(
     @Param('id', ParseIntPipe) id: number,
     @CurrentUser() user: User,
-  ): Promise<Response<undefined>> {
+  ): Promise<ISuccessResponse<undefined>> {
     await this.shopService.remove(user.id, id);
 
     return {

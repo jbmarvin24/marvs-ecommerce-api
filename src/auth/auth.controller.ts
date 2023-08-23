@@ -6,7 +6,7 @@ import { Public } from './decorators/public.decorator';
 import { ChangePasswordDto } from './dto/change-password.dto';
 import { CurrentUser } from '../user/decorators/current-user.decorator';
 import { User } from '../user/entities/user.entity';
-import { Response } from '../interceptors/transform-response.interceptor';
+import { ISuccessResponse } from '../interceptors/transform-response.interceptor';
 import {
   ApiOperation,
   ApiTags,
@@ -28,7 +28,7 @@ export class AuthContoller {
   @Post('/login')
   async login(
     @Body() loginDto: LoginDto,
-  ): Promise<Response<{ token: string }>> {
+  ): Promise<ISuccessResponse<{ token: string }>> {
     const token = await this.authService.login(
       loginDto.email,
       loginDto.password,
@@ -46,7 +46,9 @@ export class AuthContoller {
   @Public()
   @HttpCode(HttpStatus.OK)
   @Post('/register')
-  async register(@Body() registerDto: RegisterDto): Promise<Response<null>> {
+  async register(
+    @Body() registerDto: RegisterDto,
+  ): Promise<ISuccessResponse<null>> {
     await this.authService.register({
       ...registerDto,
     });
@@ -67,7 +69,7 @@ export class AuthContoller {
   async changePassword(
     @Body() changePasswordDto: ChangePasswordDto,
     @CurrentUser() user: User,
-  ): Promise<Response<null>> {
+  ): Promise<ISuccessResponse<null>> {
     await this.authService.changePassword(user, changePasswordDto);
 
     return {

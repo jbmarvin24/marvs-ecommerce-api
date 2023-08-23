@@ -13,7 +13,7 @@ import { VoucherTypeService } from './voucher-type.service';
 import { CreateVoucherTypeDto } from './dto/create-voucher-type.dto';
 import { UpdateVoucherTypeDto } from './dto/update-voucher-type.dto';
 import { Admin } from '../auth/decorators/admin.decorator';
-import { Response } from '../interceptors/transform-response.interceptor';
+import { ISuccessResponse } from '../interceptors/transform-response.interceptor';
 import { VoucherType } from './entities/voucher-type.entity';
 import { VoucherTypeQueryDto } from './dto/voucher-type-query.dto';
 import { PaginatedResult } from '../lib/pagination/paginator.lib';
@@ -26,7 +26,7 @@ export class VoucherTypeController {
   @Post()
   async create(
     @Body() createVoucherTypeDto: CreateVoucherTypeDto,
-  ): Promise<Response<VoucherType>> {
+  ): Promise<ISuccessResponse<VoucherType>> {
     return {
       data: await this.voucherTypeService.create(createVoucherTypeDto),
       message: 'Successfully created.',
@@ -36,7 +36,7 @@ export class VoucherTypeController {
   @Get()
   async findAll(
     @Query() query: VoucherTypeQueryDto,
-  ): Promise<Response<PaginatedResult<VoucherType>>> {
+  ): Promise<ISuccessResponse<PaginatedResult<VoucherType>>> {
     return {
       data: await this.voucherTypeService.findAllPaginated(query),
     };
@@ -45,7 +45,7 @@ export class VoucherTypeController {
   @Get(':id')
   async findOne(
     @Param('id', ParseIntPipe) id: number,
-  ): Promise<Response<VoucherType>> {
+  ): Promise<ISuccessResponse<VoucherType>> {
     return {
       data: await this.voucherTypeService.findOneOrThrow(id),
     };
@@ -56,7 +56,7 @@ export class VoucherTypeController {
   async update(
     @Param('id', ParseIntPipe) id: number,
     @Body() updateVoucherTypeDto: UpdateVoucherTypeDto,
-  ): Promise<Response<VoucherType>> {
+  ): Promise<ISuccessResponse<VoucherType>> {
     return {
       data: await this.voucherTypeService.update(id, updateVoucherTypeDto),
       message: 'Successfully updated.',
@@ -67,7 +67,7 @@ export class VoucherTypeController {
   @Delete(':id')
   async remove(
     @Param('id', ParseIntPipe) id: number,
-  ): Promise<Response<undefined>> {
+  ): Promise<ISuccessResponse<undefined>> {
     await this.voucherTypeService.remove(id);
     return {
       message: 'Successfully deleted.',

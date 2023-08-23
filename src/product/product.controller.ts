@@ -14,7 +14,7 @@ import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { CurrentUser } from '../user/decorators/current-user.decorator';
 import { User } from '../user/entities/user.entity';
-import { Response } from '../interceptors/transform-response.interceptor';
+import { ISuccessResponse } from '../interceptors/transform-response.interceptor';
 import { Product } from './entities/product.entity';
 import { ProductQueryDto } from './dto/product-query.dto';
 import { PaginatedResult } from '../lib/pagination/paginator.lib';
@@ -28,7 +28,7 @@ export class ProductController {
     @Body() createProductDto: CreateProductDto,
     @CurrentUser() user: User,
     @Param('shopId', ParseIntPipe) shopId: number,
-  ): Promise<Response<Product>> {
+  ): Promise<ISuccessResponse<Product>> {
     return {
       data: await this.productService.create(user.id, shopId, createProductDto),
       message: 'Successfully created.',
@@ -39,7 +39,7 @@ export class ProductController {
   async findAll(
     @Param('shopId', ParseIntPipe) shopId: number,
     @Query() query: ProductQueryDto,
-  ): Promise<Response<PaginatedResult<Product>>> {
+  ): Promise<ISuccessResponse<PaginatedResult<Product>>> {
     return {
       data: await this.productService.findAllPaginated(query, shopId),
     };
@@ -48,7 +48,7 @@ export class ProductController {
   @Get(':id')
   async findOne(
     @Param('id', ParseIntPipe) id: number,
-  ): Promise<Response<Product>> {
+  ): Promise<ISuccessResponse<Product>> {
     return {
       data: await this.productService.findOneOrThrow(id),
     };
@@ -60,7 +60,7 @@ export class ProductController {
     @Body() updateProductDto: UpdateProductDto,
     @CurrentUser() user: User,
     @Param('shopId', ParseIntPipe) shopId: number,
-  ): Promise<Response<Product>> {
+  ): Promise<ISuccessResponse<Product>> {
     return {
       data: await this.productService.update(
         id,
@@ -77,7 +77,7 @@ export class ProductController {
     @Param('id', ParseIntPipe) id: number,
     @CurrentUser() user: User,
     @Param('shopId', ParseIntPipe) shopId: number,
-  ): Promise<Response<undefined>> {
+  ): Promise<ISuccessResponse<undefined>> {
     await this.productService.remove(id, user.id, shopId);
     return {
       message: 'Successfully deleted.',

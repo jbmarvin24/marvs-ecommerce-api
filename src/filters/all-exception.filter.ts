@@ -8,7 +8,7 @@ import {
 import { HttpAdapterHost } from '@nestjs/core';
 import { ApiProperty } from '@nestjs/swagger';
 
-export interface ExceptionResponse {
+export interface IExceptionResponse {
   statusCode: number;
   success: boolean;
   message: string;
@@ -16,13 +16,14 @@ export interface ExceptionResponse {
   path: string;
 }
 
-export class StandardExceptionResponse implements ExceptionResponse {
-  @ApiProperty()
+export class ExceptionResponse implements IExceptionResponse {
+  @ApiProperty({ description: 'Status code of the exception response' })
   statusCode: number;
 
   @ApiProperty({ example: false })
   success: boolean;
 
+  @ApiProperty({ description: 'Description about the exception' })
   message: string;
 
   @ApiProperty({ description: 'Timestamp in ISO String' })
@@ -50,7 +51,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
 
     if (httpStatus === HttpStatus.INTERNAL_SERVER_ERROR) console.log(exception);
 
-    const responseBody: ExceptionResponse = {
+    const responseBody: IExceptionResponse = {
       statusCode: httpStatus,
       success: false,
       message:

@@ -3,7 +3,7 @@ import { ProfileService } from './profile.service';
 import { UpdateProfileDto } from './dto/update-profile.dto';
 import { CurrentUser } from '../user/decorators/current-user.decorator';
 import { User } from '../user/entities/user.entity';
-import { Response } from '../interceptors/transform-response.interceptor';
+import { ISuccessResponse } from '../interceptors/transform-response.interceptor';
 import { Profile } from './entities/profile.entity';
 
 @Controller('user/me/profile')
@@ -11,7 +11,7 @@ export class ProfileController {
   constructor(private readonly profileService: ProfileService) {}
 
   @Get()
-  async findOne(@CurrentUser() user: User): Promise<Response<Profile>> {
+  async findOne(@CurrentUser() user: User): Promise<ISuccessResponse<Profile>> {
     return {
       data: await this.profileService.findOneOrThrow(user.id),
     };
@@ -21,7 +21,7 @@ export class ProfileController {
   async update(
     @CurrentUser() user: User,
     @Body() updateProfileDto: UpdateProfileDto,
-  ): Promise<Response<Profile>> {
+  ): Promise<ISuccessResponse<Profile>> {
     return {
       data: await this.profileService.update(user.id, updateProfileDto),
       message: 'Successfully updated.',
