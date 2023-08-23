@@ -14,12 +14,18 @@ export const ApiCreatedResponseDec = <TModel extends Type<any>>(
     ApiCreatedResponse({
       description: 'Success operation',
       schema: {
-        $ref: getSchemaPath(SuccessResponse),
-        properties: {
-          data: {
-            $ref: getSchemaPath(model),
+        allOf: [
+          {
+            $ref: getSchemaPath(SuccessResponse),
           },
-        },
+          {
+            properties: {
+              data: {
+                $ref: getSchemaPath(model),
+              },
+            },
+          },
+        ],
       },
     }),
   );

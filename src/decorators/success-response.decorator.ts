@@ -10,12 +10,18 @@ export const ApiSuccessResponseDec = <TModel extends Type<any>>(
     ApiOkResponse({
       description: 'Success operation',
       schema: {
-        $ref: getSchemaPath(SuccessResponse),
-        properties: {
-          data: {
-            $ref: getSchemaPath(model),
+        allOf: [
+          { $ref: getSchemaPath(SuccessResponse) },
+          {
+            properties: {
+              data: model
+                ? {
+                    $ref: getSchemaPath(model),
+                  }
+                : undefined,
+            },
           },
-        },
+        ],
       },
     }),
   );
