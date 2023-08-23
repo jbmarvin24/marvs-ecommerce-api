@@ -21,7 +21,20 @@ import { ISuccessResponse } from '../interceptors/transform-response.interceptor
 import { UserDto, UserPaginatedResponse } from './dto/user.dto';
 import { Shop } from '../shop/entities/shop.entity';
 import { UserQueryDto } from './dto/user-query.dto';
+import {
+  ApiBearerAuth,
+  ApiForbiddenResponse,
+  ApiNotFoundResponse,
+  ApiOperation,
+  ApiParam,
+  ApiTags,
+  ApiUnauthorizedResponse,
+} from '@nestjs/swagger';
+import { ApiSuccessResponseDec } from '../decorators/success-response.decorator';
+import { ExceptionResponse } from '../filters/all-exception.filter';
+import { ApiPaginatedResponseDec } from '../decorators/paginated-response.decorator';
 
+@ApiTags('User')
 @Controller('user')
 @SerializeOptions({ strategy: 'excludeAll' })
 export class UserController {
@@ -30,6 +43,13 @@ export class UserController {
     private readonly shopService: ShopService,
   ) {}
 
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Get the current user.' })
+  @ApiSuccessResponseDec(User)
+  @ApiUnauthorizedResponse({
+    description: 'Authentication is required',
+    type: ExceptionResponse,
+  })
   @UseInterceptors(ClassSerializerInterceptor)
   @Get('me')
   me(@CurrentUser() user: User): ISuccessResponse<User> {
@@ -38,6 +58,17 @@ export class UserController {
     });
   }
 
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Get all the users.' })
+  @ApiPaginatedResponseDec(User)
+  @ApiUnauthorizedResponse({
+    description: 'Authentication is required',
+    type: ExceptionResponse,
+  })
+  @ApiForbiddenResponse({
+    description: 'Access to resource is not allowed',
+    type: ExceptionResponse,
+  })
   @UseInterceptors(ClassSerializerInterceptor)
   @Admin()
   @Get()
@@ -47,6 +78,22 @@ export class UserController {
     });
   }
 
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Get a user' })
+  @ApiSuccessResponseDec(User)
+  @ApiNotFoundResponse({
+    description: 'User not found.',
+    type: ExceptionResponse,
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Authentication is required',
+    type: ExceptionResponse,
+  })
+  @ApiForbiddenResponse({
+    description: 'Access to resource is not allowed',
+    type: ExceptionResponse,
+  })
+  @ApiParam({ name: 'id', description: 'Id of the user.' })
   @UseInterceptors(ClassSerializerInterceptor)
   @Get(':id')
   @Admin()
@@ -58,6 +105,22 @@ export class UserController {
     });
   }
 
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Update a user.' })
+  @ApiSuccessResponseDec(User)
+  @ApiNotFoundResponse({
+    description: 'User not found.',
+    type: ExceptionResponse,
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Authentication is required',
+    type: ExceptionResponse,
+  })
+  @ApiForbiddenResponse({
+    description: 'Access to resource is not allowed',
+    type: ExceptionResponse,
+  })
+  @ApiParam({ name: 'id', description: 'Id of the user.' })
   @UseInterceptors(ClassSerializerInterceptor)
   @Patch(':id')
   @Admin()
@@ -71,6 +134,22 @@ export class UserController {
     });
   }
 
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Delete a user' })
+  @ApiSuccessResponseDec()
+  @ApiNotFoundResponse({
+    description: 'User not found.',
+    type: ExceptionResponse,
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Authentication is required',
+    type: ExceptionResponse,
+  })
+  @ApiForbiddenResponse({
+    description: 'Access to resource is not allowed',
+    type: ExceptionResponse,
+  })
+  @ApiParam({ name: 'id', description: 'Id of the user.' })
   @UseInterceptors(ClassSerializerInterceptor)
   @Admin()
   @Delete(':id')

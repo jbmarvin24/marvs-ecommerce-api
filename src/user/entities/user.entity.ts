@@ -11,6 +11,7 @@ import { Shop } from '../../shop/entities/shop.entity';
 import { Profile } from '../../profile/entities/profile.entity';
 import { Wishlist } from '../../wishlist/entities/wishlist.entity';
 import { Expose } from 'class-transformer';
+import { ApiProperty } from '@nestjs/swagger';
 
 @Entity()
 export class User {
@@ -18,10 +19,12 @@ export class User {
     Object.assign(this, partial);
   }
 
+  @ApiProperty()
   @Expose()
   @PrimaryGeneratedColumn()
   id: number;
 
+  @ApiProperty()
   @Expose()
   @Column({ unique: true, length: 100 })
   email: string;
@@ -29,6 +32,7 @@ export class User {
   @Column({ type: 'text' })
   password: string;
 
+  @ApiProperty()
   @Expose()
   @Column({ default: false })
   isAdmin: boolean;
@@ -42,10 +46,12 @@ export class User {
   @OneToMany(() => Wishlist, (wishlist) => wishlist.user)
   wishlist: Wishlist[];
 
+  @ApiProperty()
   @Expose()
   @CreateDateColumn()
   createdAt: Date;
 
+  @ApiProperty()
   @Expose()
   @UpdateDateColumn()
   updatedAt: Date;
