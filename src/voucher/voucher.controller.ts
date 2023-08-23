@@ -17,11 +17,42 @@ import { ISuccessResponse } from '../interceptors/transform-response.interceptor
 import { Voucher } from './entities/voucher.entity';
 import { VoucherQueryDto } from './dto/voucher-query.dto';
 import { PaginatedResult } from '../lib/pagination/paginator.lib';
+import {
+  ApiBadRequestResponse,
+  ApiBearerAuth,
+  ApiForbiddenResponse,
+  ApiNotFoundResponse,
+  ApiOperation,
+  ApiParam,
+  ApiTags,
+  ApiUnauthorizedResponse,
+} from '@nestjs/swagger';
+import { ApiCreatedResponseDec } from '../decorators/created-response.decorator';
+import { ExceptionResponse } from '../filters/all-exception.filter';
+import { Public } from '../auth/decorators/public.decorator';
+import { ApiPaginatedResponseDec } from '../decorators/paginated-response.decorator';
+import { ApiSuccessResponseDec } from '../decorators/success-response.decorator';
 
+@ApiTags('Voucher')
 @Controller('voucher')
 export class VoucherController {
   constructor(private readonly voucherService: VoucherService) {}
 
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Create a voucher' })
+  @ApiCreatedResponseDec(Voucher)
+  @ApiBadRequestResponse({
+    description: 'Invalid inputs',
+    type: ExceptionResponse,
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Authentication is required',
+    type: ExceptionResponse,
+  })
+  @ApiForbiddenResponse({
+    description: 'Access to resource is not allowed',
+    type: ExceptionResponse,
+  })
   @Admin()
   @Post()
   async create(
@@ -33,6 +64,9 @@ export class VoucherController {
     };
   }
 
+  @ApiOperation({ summary: 'Get all vouchers.' })
+  @ApiPaginatedResponseDec(Voucher)
+  @Public()
   @Get()
   async findAll(
     @Query() query: VoucherQueryDto,
@@ -42,6 +76,14 @@ export class VoucherController {
     };
   }
 
+  @ApiOperation({ summary: 'Find a voucher' })
+  @ApiSuccessResponseDec(Voucher)
+  @ApiNotFoundResponse({
+    description: 'Voucher not found',
+    type: ExceptionResponse,
+  })
+  @ApiParam({ name: 'id', description: 'Voucher Id', example: 1 })
+  @Public()
   @Get(':id')
   async findOne(
     @Param('id', ParseIntPipe) id: number,
@@ -51,6 +93,22 @@ export class VoucherController {
     };
   }
 
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Update a voucher' })
+  @ApiSuccessResponseDec(Voucher)
+  @ApiNotFoundResponse({
+    description: 'Voucher not found',
+    type: ExceptionResponse,
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Authentication is required',
+    type: ExceptionResponse,
+  })
+  @ApiForbiddenResponse({
+    description: 'Access to resource is not allowed',
+    type: ExceptionResponse,
+  })
+  @ApiParam({ name: 'id', description: 'Voucher Id', example: 1 })
   @Admin()
   @Patch(':id')
   async update(
@@ -63,6 +121,22 @@ export class VoucherController {
     };
   }
 
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Delete a voucher' })
+  @ApiSuccessResponseDec(Voucher)
+  @ApiNotFoundResponse({
+    description: 'Voucher not found',
+    type: ExceptionResponse,
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Authentication is required',
+    type: ExceptionResponse,
+  })
+  @ApiForbiddenResponse({
+    description: 'Access to resource is not allowed',
+    type: ExceptionResponse,
+  })
+  @ApiParam({ name: 'id', description: 'Voucher Id', example: 1 })
   @Admin()
   @Delete(':id')
   async remove(
