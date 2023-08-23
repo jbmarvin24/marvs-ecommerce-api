@@ -30,6 +30,7 @@ import { ApiSuccessResponseDec } from '../decorators/success-response.decorator'
 import { ApiCreatedResponseDec } from '../decorators/created-response.decorator';
 import { ApiPaginatedResponseDec } from '../decorators/paginated-response.decorator';
 import { Public } from '../auth/decorators/public.decorator';
+import { ExceptionResponse } from '../filters/all-exception.filter';
 
 @ApiTags('Category')
 @Controller('category')
@@ -39,8 +40,14 @@ export class CategoryController {
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Create a category' })
   @ApiCreatedResponseDec(Category)
-  @ApiBadRequestResponse({ description: 'Invalid inputs' })
-  @ApiUnauthorizedResponse({ description: 'Authentication is required' })
+  @ApiBadRequestResponse({
+    description: 'Invalid inputs',
+    type: ExceptionResponse,
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Authentication is required',
+    type: ExceptionResponse,
+  })
   @Admin()
   @Post()
   async create(
@@ -66,7 +73,10 @@ export class CategoryController {
 
   @ApiOperation({ summary: 'Find a category' })
   @ApiSuccessResponseDec(Category)
-  @ApiNotFoundResponse({ description: 'Category not found' })
+  @ApiNotFoundResponse({
+    description: 'Category not found',
+    type: ExceptionResponse,
+  })
   @ApiParam({ name: 'id', description: 'Category Id', example: 1 })
   @Public()
   @Get(':id')
@@ -81,9 +91,15 @@ export class CategoryController {
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Update a category' })
   @ApiSuccessResponseDec(Category)
-  @ApiNotFoundResponse({ description: 'Category not found' })
+  @ApiNotFoundResponse({
+    description: 'Category not found',
+    type: ExceptionResponse,
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Authentication is required',
+    type: ExceptionResponse,
+  })
   @ApiParam({ name: 'id', description: 'Category Id', example: 1 })
-  @ApiUnauthorizedResponse({ description: 'Authentication is required' })
   @Admin()
   @Patch(':id')
   async update(
@@ -99,9 +115,15 @@ export class CategoryController {
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Delete a category' })
   @ApiSuccessResponseDec()
-  @ApiNotFoundResponse({ description: 'Category not found' })
+  @ApiNotFoundResponse({
+    description: 'Category not found',
+    type: ExceptionResponse,
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Authentication is required',
+    type: ExceptionResponse,
+  })
   @ApiParam({ name: 'id', description: 'Category Id', example: 1 })
-  @ApiUnauthorizedResponse({ description: 'Authentication is required' })
   @Admin()
   @Delete(':id')
   async remove(
