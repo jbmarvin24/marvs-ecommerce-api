@@ -12,6 +12,7 @@ import {
   ApiTags,
   ApiUnauthorizedResponse,
   ApiBadRequestResponse,
+  ApiBearerAuth,
 } from '@nestjs/swagger';
 import { ApiSuccessResponseDec } from '../decorators/success-response.decorator';
 import { ExceptionResponse } from '../filters/all-exception.filter';
@@ -65,11 +66,16 @@ export class AuthContoller {
     };
   }
 
+  @ApiBearerAuth()
   @ApiOperation({ summary: 'Changing of user password' })
   @ApiSuccessResponseDec()
   @ApiBadRequestResponse({
     description:
       'The Old Password does not match or new password is the same with the old password',
+    type: ExceptionResponse,
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Authentication is required',
     type: ExceptionResponse,
   })
   @HttpCode(HttpStatus.OK)
