@@ -123,7 +123,7 @@ export class VoucherController {
 
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Delete a voucher' })
-  @ApiSuccessResponseDec(Voucher)
+  @ApiSuccessResponseDec()
   @ApiNotFoundResponse({
     description: 'Voucher not found',
     type: ExceptionResponse,

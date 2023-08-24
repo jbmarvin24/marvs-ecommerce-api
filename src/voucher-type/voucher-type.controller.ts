@@ -109,7 +109,7 @@ export class VoucherTypeController {
   }
 
   @ApiOperation({ summary: 'Update a voucher type' })
-  @ApiSuccessResponseDec(VoucherType)
+  @ApiSuccessResponseDec()
   @ApiNotFoundResponse({
     description: 'Voucher type not found',
     type: ExceptionResponse,
