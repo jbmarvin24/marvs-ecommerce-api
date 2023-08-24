@@ -27,6 +27,10 @@ async function bootstrap() {
     .setVersion('1.0')
     .addBearerAuth()
     .addServer('http://localhost:4000')
+    .addTag('Authentications', '🔐')
+    .addTag('Product', 'All about products👜🏀.')
+    .addTag('Voucher', 'Vouchers!😍💯')
+    .addTag('Category', 'Available product categories.')
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
