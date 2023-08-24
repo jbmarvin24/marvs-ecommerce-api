@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { Repository } from 'typeorm';
@@ -15,20 +19,16 @@ export class ProductService {
     private readonly productRepository: Repository<Product>,
     private shopService: ShopService,
   ) {}
-  async create(
-    userId: number,
-    shopId: number,
-    createProductDto: CreateProductDto,
-  ) {
-    await this.shopService.validateShopOwner(userId, shopId);
+  async create(userId: number, createProductDto: CreateProductDto) {
+    await this.shopService.validateShopOwner(userId, createProductDto.shopId);
 
     return await this.productRepository.save(
-      new Product({ ...createProductDto, shopId }),
+      new Product({ ...createProductDto }),
     );
   }
 
-  async findAllPaginated(q: ProductQueryDto, shopId: number | null = null) {
-    const { page, pageSize, brand, name, priceMax, priceMin, sort } = q;
+  async findAllPaginated(q: ProductQueryDto) {
+    const { page, pageSize, brand, name, priceMax, priceMin, sort, shopId } = q;
 
     const qb = this.productRepository.createQueryBuilder('p');
 
@@ -66,13 +66,8 @@ export class ProductService {
     });
   }
 
-  async update(
-    id: number,
-    userId: number,
-    shopId: number,
-    updateProductDto: UpdateProductDto,
-  ) {
-    await this.shopService.validateShopOwner(userId, shopId);
+  async update(id: number, userId: number, updateProductDto: UpdateProductDto) {
+    await this.isRightProductOwner(id, userId);
 
     const product = await this.findOneOrThrow(id);
 
@@ -84,12 +79,22 @@ export class ProductService {
     );
   }
 
-  async remove(id: number, userId: number, shopId: number) {
-    await this.shopService.validateShopOwner(userId, shopId);
+  async remove(id: number, userId: number) {
+    await this.isRightProductOwner(id, userId);
 
     const product = await this.findOneOrThrow(id);
 
     return await this.productRepository.remove(product);
+  }
+
+  async isRightProductOwner(productId: number, userId: number) {
+    const product = await this.findOneOrThrow(productId);
+    const shop = await this.shopService.findOneOrThrow(product.shopId);
+
+    if (shop.userId !== userId)
+      throw new ForbiddenException('Invalid product owner.');
+
+    return true;
   }
 
   async findOneOrThrow(id: number) {

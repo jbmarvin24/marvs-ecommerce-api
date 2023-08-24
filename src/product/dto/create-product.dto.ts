@@ -9,6 +9,10 @@ import {
 import { CategoryMustExist } from '../../category/validations/category-must-exist.constraint';
 
 export class CreateProductDto {
+  //TODO: Validate shop existence
+  @IsNumber()
+  shopId: number;
+
   @CategoryMustExist()
   @IsNumber()
   categoryId: number;

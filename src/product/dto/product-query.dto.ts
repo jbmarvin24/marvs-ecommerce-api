@@ -2,6 +2,10 @@ import { IsIn, IsNumberString, IsOptional, IsString } from 'class-validator';
 import { PaginateQueryDto } from '../../lib/pagination/paginate-query.dto.lib';
 
 export class ProductQueryDto extends PaginateQueryDto {
+  @IsNumberString()
+  @IsOptional()
+  shopId: number;
+
   @IsString()
   @IsOptional()
   name?: string;

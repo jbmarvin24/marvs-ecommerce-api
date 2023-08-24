@@ -19,7 +19,7 @@ import { Product } from './entities/product.entity';
 import { ProductQueryDto } from './dto/product-query.dto';
 import { PaginatedResult } from '../lib/pagination/paginator.lib';
 
-@Controller('shop/:shopId/product')
+@Controller('product')
 export class ProductController {
   constructor(private readonly productService: ProductService) {}
 
@@ -27,21 +27,19 @@ export class ProductController {
   async create(
     @Body() createProductDto: CreateProductDto,
     @CurrentUser() user: User,
-    @Param('shopId', ParseIntPipe) shopId: number,
   ): Promise<ISuccessResponse<Product>> {
     return {
-      data: await this.productService.create(user.id, shopId, createProductDto),
+      data: await this.productService.create(user.id, createProductDto),
       message: 'Successfully created.',
     };
   }
 
   @Get()
   async findAll(
-    @Param('shopId', ParseIntPipe) shopId: number,
     @Query() query: ProductQueryDto,
   ): Promise<ISuccessResponse<PaginatedResult<Product>>> {
     return {
-      data: await this.productService.findAllPaginated(query, shopId),
+      data: await this.productService.findAllPaginated(query),
     };
   }
 
@@ -59,15 +57,9 @@ export class ProductController {
     @Param('id', ParseIntPipe) id: number,
     @Body() updateProductDto: UpdateProductDto,
     @CurrentUser() user: User,
-    @Param('shopId', ParseIntPipe) shopId: number,
   ): Promise<ISuccessResponse<Product>> {
     return {
-      data: await this.productService.update(
-        id,
-        user.id,
-        shopId,
-        updateProductDto,
-      ),
+      data: await this.productService.update(id, user.id, updateProductDto),
       message: 'Successfully updated.',
     };
   }
@@ -76,9 +68,8 @@ export class ProductController {
   async remove(
     @Param('id', ParseIntPipe) id: number,
     @CurrentUser() user: User,
-    @Param('shopId', ParseIntPipe) shopId: number,
   ): Promise<ISuccessResponse<undefined>> {
-    await this.productService.remove(id, user.id, shopId);
+    await this.productService.remove(id, user.id);
     return {
       message: 'Successfully deleted.',
     };
