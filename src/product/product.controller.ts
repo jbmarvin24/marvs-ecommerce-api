@@ -18,11 +18,42 @@ import { ISuccessResponse } from '../interceptors/transform-response.interceptor
 import { Product } from './entities/product.entity';
 import { ProductQueryDto } from './dto/product-query.dto';
 import { PaginatedResult } from '../lib/pagination/paginator.lib';
+import {
+  ApiBadRequestResponse,
+  ApiBearerAuth,
+  ApiForbiddenResponse,
+  ApiNotFoundResponse,
+  ApiOperation,
+  ApiParam,
+  ApiTags,
+  ApiUnauthorizedResponse,
+} from '@nestjs/swagger';
+import { ApiCreatedResponseDec } from '../decorators/created-response.decorator';
+import { ExceptionResponse } from '../filters/all-exception.filter';
+import { Public } from '../auth/decorators/public.decorator';
+import { ApiPaginatedResponseDec } from '../decorators/paginated-response.decorator';
+import { ApiSuccessResponseDec } from '../decorators/success-response.decorator';
 
+@ApiTags('Product')
 @Controller('product')
 export class ProductController {
   constructor(private readonly productService: ProductService) {}
 
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Create a product' })
+  @ApiCreatedResponseDec(Product)
+  @ApiBadRequestResponse({
+    description: 'Invalid inputs',
+    type: ExceptionResponse,
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Authentication is required',
+    type: ExceptionResponse,
+  })
+  @ApiForbiddenResponse({
+    description: 'Invalid shop owner',
+    type: ExceptionResponse,
+  })
   @Post()
   async create(
     @Body() createProductDto: CreateProductDto,
@@ -34,6 +65,9 @@ export class ProductController {
     };
   }
 
+  @ApiOperation({ summary: 'Get all products' })
+  @ApiPaginatedResponseDec(Product)
+  @Public()
   @Get()
   async findAll(
     @Query() query: ProductQueryDto,
@@ -43,6 +77,14 @@ export class ProductController {
     };
   }
 
+  @ApiOperation({ summary: 'Find a product' })
+  @ApiSuccessResponseDec(Product)
+  @ApiNotFoundResponse({
+    description: 'Product not found',
+    type: ExceptionResponse,
+  })
+  @ApiParam({ name: 'id', description: 'Product Id', example: 1 })
+  @Public()
   @Get(':id')
   async findOne(
     @Param('id', ParseIntPipe) id: number,
@@ -52,6 +94,22 @@ export class ProductController {
     };
   }
 
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Update a product' })
+  @ApiSuccessResponseDec(Product)
+  @ApiNotFoundResponse({
+    description: 'Product not found',
+    type: ExceptionResponse,
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Authentication is required',
+    type: ExceptionResponse,
+  })
+  @ApiForbiddenResponse({
+    description: 'Invalid product owner',
+    type: ExceptionResponse,
+  })
+  @ApiParam({ name: 'id', description: 'Product Id', example: 1 })
   @Patch(':id')
   async update(
     @Param('id', ParseIntPipe) id: number,
@@ -64,6 +122,22 @@ export class ProductController {
     };
   }
 
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Delete a product' })
+  @ApiSuccessResponseDec()
+  @ApiNotFoundResponse({
+    description: 'Product not found',
+    type: ExceptionResponse,
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Authentication is required',
+    type: ExceptionResponse,
+  })
+  @ApiForbiddenResponse({
+    description: 'Invalid product owner',
+    type: ExceptionResponse,
+  })
+  @ApiParam({ name: 'id', description: 'Product Id', example: 1 })
   @Delete(':id')
   async remove(
     @Param('id', ParseIntPipe) id: number,
