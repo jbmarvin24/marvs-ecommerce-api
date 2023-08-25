@@ -1,6 +1,4 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { UserModule } from './user/user.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ShopModule } from './shop/shop.module';
@@ -38,7 +36,5 @@ import ormConfigProd from './config/orm.config.prod';
     ProductModule,
     WishlistModule,
   ],
-  controllers: [AppController],
-  providers: [AppService],
 })
 export class AppModule {}
