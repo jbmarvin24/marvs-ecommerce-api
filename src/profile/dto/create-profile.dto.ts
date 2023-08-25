@@ -34,7 +34,7 @@ export class CreateProfileDto {
   @Type(() => AddressDto)
   shippingAddress: AddressDto;
 
-  @ApiProperty({ example: '5555555' })
+  @ApiProperty({ example: '(555) 123-4567' })
   @IsNotEmpty()
   @MaxLength(100)
   phoneNo: string;

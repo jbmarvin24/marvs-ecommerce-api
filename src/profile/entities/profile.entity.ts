@@ -8,6 +8,8 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { User } from '../../user/entities/user.entity';
+import { ApiProperty } from '@nestjs/swagger';
+import { AddressDto } from '../dto/address.dto';
 
 @Entity()
 export class Profile {
@@ -15,9 +17,11 @@ export class Profile {
     Object.assign(this, partial);
   }
 
+  @ApiProperty()
   @PrimaryGeneratedColumn()
   id: number;
 
+  @ApiProperty()
   @Column()
   userId: number;
 
@@ -25,15 +29,19 @@ export class Profile {
   @JoinColumn()
   user: User;
 
+  @ApiProperty()
   @Column({ length: 100 })
   firstName: string;
 
+  @ApiProperty()
   @Column({ length: 100 })
   lastName: string;
 
+  @ApiProperty()
   @Column({ nullable: true, length: 100 })
   middleName?: string;
 
+  @ApiProperty({ type: AddressDto })
   @Column('simple-json')
   shippingAddress: {
     province: string;
@@ -42,12 +50,15 @@ export class Profile {
     street: string;
   };
 
+  @ApiProperty()
   @Column({ length: 100 })
   phoneNo: string;
 
+  @ApiProperty()
   @CreateDateColumn()
   createdAt: Date;
 
+  @ApiProperty()
   @UpdateDateColumn()
   updatedAt: Date;
 }
