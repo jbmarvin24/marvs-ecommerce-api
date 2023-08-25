@@ -18,11 +18,38 @@ import { ISuccessResponse } from '../interceptors/transform-response.interceptor
 import { Shop } from './entities/shop.entity';
 import { ShopQueryDto } from './dto/shop-query.dto';
 import { PaginatedResult } from '../lib/pagination/paginator.lib';
+import {
+  ApiBadRequestResponse,
+  ApiBearerAuth,
+  ApiForbiddenResponse,
+  ApiNotFoundResponse,
+  ApiOperation,
+  ApiParam,
+  ApiTags,
+  ApiUnauthorizedResponse,
+} from '@nestjs/swagger';
+import { ApiCreatedResponseDec } from '../decorators/created-response.decorator';
+import { ExceptionResponse } from '../filters/all-exception.filter';
+import { Public } from '../auth/decorators/public.decorator';
+import { ApiPaginatedResponseDec } from '../decorators/paginated-response.decorator';
+import { ApiSuccessResponseDec } from '../decorators/success-response.decorator';
 
+@ApiTags('Shop')
 @Controller('shop')
 export class ShopController {
   constructor(private readonly shopService: ShopService) {}
 
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Create a shop' })
+  @ApiCreatedResponseDec(Shop)
+  @ApiBadRequestResponse({
+    description: 'Invalid inputs',
+    type: ExceptionResponse,
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Authentication is required',
+    type: ExceptionResponse,
+  })
   @Post()
   async create(
     @Body() createShopDto: CreateShopDto,
@@ -34,6 +61,9 @@ export class ShopController {
     };
   }
 
+  @ApiOperation({ summary: 'Get all shops' })
+  @ApiPaginatedResponseDec(Shop)
+  @Public()
   @Get()
   async findAll(
     @Query() query: ShopQueryDto,
@@ -43,6 +73,14 @@ export class ShopController {
     };
   }
 
+  @ApiOperation({ summary: 'Find a shop' })
+  @ApiSuccessResponseDec(Shop)
+  @ApiNotFoundResponse({
+    description: 'Shop not found',
+    type: ExceptionResponse,
+  })
+  @ApiParam({ name: 'id', description: 'Shop Id', example: 1 })
+  @Public()
   @Get(':id')
   async findOne(
     @Param('id', ParseIntPipe) id: number,
@@ -52,6 +90,22 @@ export class ShopController {
     };
   }
 
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Update a shop' })
+  @ApiSuccessResponseDec(Shop)
+  @ApiNotFoundResponse({
+    description: 'Shop not found',
+    type: ExceptionResponse,
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Authentication is required',
+    type: ExceptionResponse,
+  })
+  @ApiForbiddenResponse({
+    description: 'Invalid Shop owner',
+    type: ExceptionResponse,
+  })
+  @ApiParam({ name: 'id', description: 'Shop Id', example: 1 })
   @Patch(':id')
   async update(
     @Param('id', ParseIntPipe) id: number,
@@ -64,6 +118,22 @@ export class ShopController {
     };
   }
 
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Update a shop' })
+  @ApiSuccessResponseDec()
+  @ApiNotFoundResponse({
+    description: 'Shop not found',
+    type: ExceptionResponse,
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Authentication is required',
+    type: ExceptionResponse,
+  })
+  @ApiForbiddenResponse({
+    description: 'Invalid Shop owner',
+    type: ExceptionResponse,
+  })
+  @ApiParam({ name: 'id', description: 'Shop Id', example: 1 })
   @Delete(':id')
   async remove(
     @Param('id', ParseIntPipe) id: number,

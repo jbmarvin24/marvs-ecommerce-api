@@ -31,6 +31,7 @@ async function bootstrap() {
     .addTag('Product', 'All about products👜🏀.')
     .addTag('Voucher', 'Vouchers!😍💯')
     .addTag('Category', 'Available product categories.')
+    .addTag('Shop', 'All about shops🏪')
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
