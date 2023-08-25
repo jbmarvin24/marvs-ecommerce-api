@@ -19,7 +19,24 @@ import { Wishlist } from './entities/wishlist.entity';
 import { ProductService } from '../product/product.service';
 import { WishlistQueryDto } from './dto/wishlist-query.dto';
 import { PaginatedResult } from '../lib/pagination/paginator.lib';
+import {
+  ApiBearerAuth,
+  ApiNotFoundResponse,
+  ApiOperation,
+  ApiParam,
+  ApiTags,
+  ApiUnauthorizedResponse,
+} from '@nestjs/swagger';
+import { ExceptionResponse } from '../filters/all-exception.filter';
+import { ApiPaginatedResponseDec } from '../decorators/paginated-response.decorator';
+import { ApiSuccessResponseDec } from '../decorators/success-response.decorator';
 
+@ApiBearerAuth()
+@ApiTags('Wishlist')
+@ApiUnauthorizedResponse({
+  description: 'Authentication is required',
+  type: ExceptionResponse,
+})
 @Controller('user/me/wishlist')
 export class WishlistController {
   constructor(
@@ -27,6 +44,8 @@ export class WishlistController {
     private readonly productService: ProductService,
   ) {}
 
+  @ApiOperation({ summary: 'Add product to wishlist' })
+  @ApiSuccessResponseDec(Wishlist)
   @HttpCode(HttpStatus.OK)
   @Post()
   async create(
@@ -43,6 +62,8 @@ export class WishlistController {
     };
   }
 
+  @ApiOperation({ summary: "Get user's wishlist" })
+  @ApiPaginatedResponseDec(Wishlist)
   @Get()
   async findAll(
     @Query() query: WishlistQueryDto,
@@ -53,6 +74,13 @@ export class WishlistController {
     };
   }
 
+  @ApiOperation({ summary: 'Remove product to wishlist' })
+  @ApiSuccessResponseDec()
+  @ApiNotFoundResponse({
+    description: "The product is not in the user's wishlist.",
+    type: ExceptionResponse,
+  })
+  @ApiParam({ name: 'productId', description: 'Product Id', example: 1 })
   @Delete(':productId')
   async remove(
     @Param('productId', ParseIntPipe) productId: number,
