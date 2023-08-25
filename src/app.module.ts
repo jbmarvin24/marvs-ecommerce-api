@@ -11,7 +11,6 @@ import { AuthModule } from './auth/auth.module';
 import { ProfileModule } from './profile/profile.module';
 import { ProductModule } from './product/product.module';
 import { WishlistModule } from './wishlist/wishlist.module';
-import { SearchModule } from './search/search.module';
 import { ConfigModule } from '@nestjs/config';
 import ormConfig from './config/orm.config';
 import ormConfigProd from './config/orm.config.prod';
@@ -38,7 +37,6 @@ import ormConfigProd from './config/orm.config.prod';
     ProfileModule,
     ProductModule,
     WishlistModule,
-    SearchModule,
   ],
   controllers: [AppController],
   providers: [AppService],
