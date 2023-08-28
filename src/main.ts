@@ -42,7 +42,7 @@ Some useful links:
     .addTag('Voucher Type', 'Manage different types of vouchers')
     .build();
   const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api', app, document, {
+  SwaggerModule.setup('/', app, document, {
     customSiteTitle: 'Marvs Ecommerce API',
   });
 
