@@ -6,7 +6,7 @@ import { TransformResponseInterceptor } from './interceptors/transform-response.
 import { AllExceptionsFilter } from './filters/all-exception.filter';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
-const PORT = 4000;
+const PORT = process.env.PORT || 4000;
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -22,19 +22,29 @@ async function bootstrap() {
   const config = new DocumentBuilder()
     .setTitle('Marvs Ecommerce API')
     .setDescription(
-      'My built Ecommerce API using Nest JS, TypeORM and Postgres.',
+      `My built Ecommerce API using Nest JS, TypeORM and Postgres.
+
+Some useful links:
+- [The Marvs Ecommerce API repository](https://github.com/jbmarvin24/marvs-ecommerce-api)
+- [The source API definition for the Marvs Ecommerce API](http://localhost:4000/api-json)
+      `,
     )
     .setVersion('1.0')
     .addBearerAuth()
-    .addServer('http://localhost:4000')
     .addTag('Authentications', '🔐')
-    .addTag('Product', 'All about products👜🏀.')
+    .addTag('Product', 'All about products👜🏀')
     .addTag('Voucher', 'Vouchers!😍💯')
-    .addTag('Category', 'Available product categories.')
+    .addTag('Category', 'Available product categories')
     .addTag('Shop', 'All about shops🏪')
+    .addTag('User', 'Manage users🤵')
+    .addTag('Profile', "Manage user's profile📃")
+    .addTag('Wishlist', "User's wishlist🚀")
+    .addTag('Voucher Type', 'Manage different types of vouchers')
     .build();
   const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api', app, document);
+  SwaggerModule.setup('api', app, document, {
+    customSiteTitle: 'Marvs Ecommerce API',
+  });
 
   await app.listen(PORT);
   console.log(`🚀 Application is running on: http://localhost:${PORT}`);
