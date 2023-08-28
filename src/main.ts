@@ -46,6 +46,9 @@ Some useful links:
     customSiteTitle: 'Marvs Ecommerce API',
   });
 
+  console.log(process.env.DB_HOST);
+  console.log(process.env.NODE_ENV);
+
   await app.listen(PORT);
   console.log(`🚀 Application is running on: http://localhost:${PORT}`);
 }
