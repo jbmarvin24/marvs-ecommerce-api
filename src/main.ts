@@ -26,7 +26,6 @@ async function bootstrap() {
 
 Some useful links:
 - [The Marvs Ecommerce API repository](https://github.com/jbmarvin24/marvs-ecommerce-api)
-- [The source API definition for the Marvs Ecommerce API](http://localhost:4000/api-json)
       `,
     )
     .setVersion('1.0')
@@ -45,9 +44,6 @@ Some useful links:
   SwaggerModule.setup('/', app, document, {
     customSiteTitle: 'Marvs Ecommerce API',
   });
-
-  console.log(process.env.DB_HOST);
-  console.log(process.env.NODE_ENV);
 
   await app.listen(PORT);
   console.log(`🚀 Application is running on: http://localhost:${PORT}`);
