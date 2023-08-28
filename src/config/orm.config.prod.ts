@@ -28,6 +28,7 @@ export default registerAs(
       Product,
       Wishlist,
     ],
+    ssl: true,
     synchronize: false,
     dropSchema: false,
   }),
