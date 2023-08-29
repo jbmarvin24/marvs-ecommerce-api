@@ -5,7 +5,6 @@ import { ApiProperty } from '@nestjs/swagger';
 export class VoucherTypeQueryDto extends PaginateQueryDto {
   @ApiProperty({
     description: 'Voucher type name.',
-    example: 'Free Shipping',
     required: false,
   })
   @IsString()
