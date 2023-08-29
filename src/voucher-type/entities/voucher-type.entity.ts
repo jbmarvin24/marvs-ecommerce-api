@@ -3,9 +3,11 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { Voucher } from '../../voucher/entities/voucher.entity';
 
 @Entity()
 export class VoucherType {
@@ -20,6 +22,9 @@ export class VoucherType {
   @ApiProperty()
   @Column({ length: 100 })
   name: string;
+
+  @OneToMany(() => Voucher, (voucher) => voucher.voucherType)
+  vouchers: Voucher[];
 
   @ApiProperty()
   @Column({ length: 500, nullable: true })

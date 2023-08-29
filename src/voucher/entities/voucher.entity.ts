@@ -3,9 +3,12 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
+  ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { VoucherType } from '../../voucher-type/entities/voucher-type.entity';
 
 @Entity()
 export class Voucher {
@@ -16,6 +19,14 @@ export class Voucher {
   @ApiProperty()
   @PrimaryGeneratedColumn()
   id: number;
+
+  @ApiProperty()
+  @Column()
+  voucherTypeId: number;
+
+  @ManyToOne(() => VoucherType, (voucherType) => voucherType.vouchers)
+  @JoinColumn()
+  voucherType: VoucherType;
 
   @ApiProperty()
   @Column({ length: 100 })
