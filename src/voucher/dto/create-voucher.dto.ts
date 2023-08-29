@@ -32,4 +32,9 @@ export class CreateVoucherDto {
   @MaxLength(500)
   @IsOptional()
   description: string;
+
+  @ApiProperty({ minimum: 1 })
+  @Min(0)
+  @IsNumber()
+  voucherTypeId: number;
 }
