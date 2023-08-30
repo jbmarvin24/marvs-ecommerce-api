@@ -7,6 +7,7 @@ import {
   MaxLength,
   Min,
 } from 'class-validator';
+import { VoucherTypeMustExist } from '../../voucher-type/validations/voucher-type-must-exist.constraint';
 
 export class CreateVoucherDto {
   @ApiProperty({ maxLength: 100 })
@@ -34,6 +35,7 @@ export class CreateVoucherDto {
   description: string;
 
   @ApiProperty({ minimum: 1 })
+  @VoucherTypeMustExist()
   @Min(0)
   @IsNumber()
   voucherTypeId: number;
