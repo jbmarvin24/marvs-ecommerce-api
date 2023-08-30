@@ -22,7 +22,7 @@ export class Wishlist {
 
   @ManyToOne(() => User, (user) => user.wishlist)
   @JoinColumn({ name: 'userId', referencedColumnName: 'id' })
-  user: User[];
+  user: User;
 
   @ApiProperty()
   @PrimaryColumn()
