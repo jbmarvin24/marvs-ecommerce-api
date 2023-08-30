@@ -32,7 +32,6 @@ export class WishlistService {
 
     const qb = this.wishlistRepository.createQueryBuilder('w');
 
-    qb.leftJoinAndSelect('w.product', 'p');
     qb.where('w.userId = :userId', { userId });
 
     return await paginate(qb, page, pageSize);
