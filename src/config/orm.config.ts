@@ -8,6 +8,7 @@ import { User } from '../user/entities/user.entity';
 import { VoucherType } from '../voucher-type/entities/voucher-type.entity';
 import { Voucher } from '../voucher/entities/voucher.entity';
 import { Wishlist } from '../wishlist/entities/wishlist.entity';
+import { Cart } from '../cart/entities/cart.entity';
 
 export default registerAs(
   'orm.config',
@@ -27,6 +28,7 @@ export default registerAs(
       Voucher,
       Product,
       Wishlist,
+      Cart,
     ],
     synchronize: true,
     dropSchema: Boolean(parseInt(process.env.DB_DROP_SCHEMA)),
