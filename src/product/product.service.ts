@@ -28,13 +28,26 @@ export class ProductService {
   }
 
   async findAllPaginated(q: ProductQueryDto) {
-    const { page, pageSize, brand, name, priceMax, priceMin, sort, shopId } = q;
+    const {
+      page,
+      pageSize,
+      brand,
+      name,
+      priceMax,
+      priceMin,
+      sort,
+      shopId,
+      categoryId,
+    } = q;
 
     const qb = this.productRepository.createQueryBuilder('p');
 
+    // Filter
+
     if (shopId) qb.andWhere('p.shopId = :shopId', { shopId });
 
-    // Filter
+    if (categoryId) qb.where('p.categoryId = :categoryId', { categoryId });
+
     if (name)
       qb.andWhere('LOWER(p.name) LIKE :name', {
         name: `%${name.toLowerCase()}%`,

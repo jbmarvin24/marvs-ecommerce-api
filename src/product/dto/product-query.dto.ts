@@ -8,6 +8,11 @@ export class ProductQueryDto extends PaginateQueryDto {
   @IsOptional()
   shopId?: number;
 
+  @ApiProperty({ description: 'Filter by category.', required: false })
+  @IsNumberString()
+  @IsOptional()
+  categoryId?: number;
+
   @ApiProperty({ description: 'Filter by product name.', required: false })
   @IsString()
   @IsOptional()
