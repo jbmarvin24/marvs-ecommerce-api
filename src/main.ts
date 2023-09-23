@@ -28,7 +28,7 @@ Some useful links:
 - [The Marvs Ecommerce API repository](https://github.com/jbmarvin24/marvs-ecommerce-api)
       `,
     )
-    .setVersion('1.0')
+    .setVersion('1.1')
     .addBearerAuth()
     .addTag('Authentications', '🔐')
     .addTag('Product', 'All about products👜🏀')
