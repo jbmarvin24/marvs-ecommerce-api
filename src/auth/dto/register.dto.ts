@@ -1,9 +1,9 @@
 import { IsEmail, IsNotEmpty, IsStrongPassword } from 'class-validator';
 import { UserEmailNotExist } from '../validations/user-email-not-exist.constraint';
-import { CreateProfileDto } from '../../profile/dto/create-profile.dto';
 import { ApiProperty } from '@nestjs/swagger';
+import { IsMatched } from '../../validations/is-matched.constraint';
 
-export class RegisterDto extends CreateProfileDto {
+export class RegisterDto {
   @ApiProperty({ example: 'john.doe@gmail.com' })
   @UserEmailNotExist()
   @IsEmail()
@@ -19,4 +19,9 @@ export class RegisterDto extends CreateProfileDto {
   )
   @IsNotEmpty()
   password: string;
+
+  @ApiProperty({ example: '123456' })
+  @IsMatched('password')
+  @IsNotEmpty()
+  confirmPassword: string;
 }

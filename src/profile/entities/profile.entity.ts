@@ -30,20 +30,20 @@ export class Profile {
   user: User;
 
   @ApiProperty()
-  @Column({ length: 100 })
-  firstName: string;
+  @Column({ length: 100, nullable: true })
+  firstName?: string;
 
   @ApiProperty()
-  @Column({ length: 100 })
-  lastName: string;
+  @Column({ length: 100, nullable: true })
+  lastName?: string;
 
   @ApiProperty()
-  @Column({ nullable: true, length: 100 })
+  @Column({ length: 100, nullable: true })
   middleName?: string;
 
   @ApiProperty({ type: AddressDto })
-  @Column('simple-json')
-  shippingAddress: {
+  @Column('simple-json', { nullable: true })
+  shippingAddress?: {
     province: string;
     city: string;
     barangay: string;
@@ -51,8 +51,8 @@ export class Profile {
   };
 
   @ApiProperty()
-  @Column({ length: 100 })
-  phoneNo: string;
+  @Column({ length: 100, nullable: true })
+  phoneNo?: string;
 
   @ApiProperty()
   @CreateDateColumn()

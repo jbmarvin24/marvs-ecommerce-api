@@ -1,41 +1,36 @@
-import {
-  IsNotEmpty,
-  MaxLength,
-  IsOptional,
-  ValidateNested,
-  IsNotEmptyObject,
-} from 'class-validator';
+import { MaxLength, IsOptional, ValidateNested } from 'class-validator';
 import { AddressDto } from './address.dto';
 import { Type } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateProfileDto {
-  @ApiProperty({ example: 'John' })
-  @IsNotEmpty()
+  @ApiProperty({ example: 'John', required: false })
   @MaxLength(100)
+  @IsOptional()
   firstName: string;
 
-  @ApiProperty({ example: 'Doe' })
-  @IsNotEmpty()
+  @ApiProperty({ example: 'Doe', required: false })
   @MaxLength(100)
+  @IsOptional()
   lastName: string;
 
-  @ApiProperty({ example: 'Pedro' })
-  @IsOptional()
+  @ApiProperty({ example: 'Pedro', required: false })
   @MaxLength(500)
+  @IsOptional()
   middleName?: string;
 
   @ApiProperty({
     description: 'Shipping address in a object',
+    required: false,
     type: AddressDto,
   })
   @ValidateNested()
-  @IsNotEmptyObject()
+  @IsOptional()
   @Type(() => AddressDto)
   shippingAddress: AddressDto;
 
-  @ApiProperty({ example: '(555) 123-4567' })
-  @IsNotEmpty()
+  @ApiProperty({ example: '(555) 123-4567', required: false })
   @MaxLength(100)
+  @IsOptional()
   phoneNo: string;
 }
