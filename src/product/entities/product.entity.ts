@@ -12,6 +12,7 @@ import { Shop } from '../../shop/entities/shop.entity';
 import { Wishlist } from '../../wishlist/entities/wishlist.entity';
 import { ApiProperty } from '@nestjs/swagger';
 import { Cart } from '../../cart/entities/cart.entity';
+import { OrderParticular } from '../../order/entities/order-particular.entity';
 
 @Entity()
 export class Product {
@@ -66,6 +67,12 @@ export class Product {
 
   @OneToMany(() => Cart, (cart) => cart.user)
   cart: Cart[];
+
+  @OneToMany(
+    () => OrderParticular,
+    (orderParticular) => orderParticular.product,
+  )
+  orderParticulars: OrderParticular;
 
   @ApiProperty()
   @CreateDateColumn()

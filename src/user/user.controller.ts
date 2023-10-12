@@ -33,6 +33,11 @@ import {
 import { ApiSuccessResponseDec } from '../decorators/success-response.decorator';
 import { ExceptionResponse } from '../filters/all-exception.filter';
 import { ApiPaginatedResponseDec } from '../decorators/paginated-response.decorator';
+import { OrderService } from '../order/order.service';
+import { OrderQueryDto } from '../order/dto/order-query.dto';
+import { Order } from '../order/entities/order.entity';
+import { PaginatedResult } from '../lib/pagination/paginator.lib';
+import { OrderParticular } from '../order/entities/order-particular.entity';
 
 @ApiTags('User')
 @Controller('user')
@@ -41,6 +46,7 @@ export class UserController {
   constructor(
     private readonly userService: UserService,
     private readonly shopService: ShopService,
+    private readonly orderService: OrderService,
   ) {}
 
   @ApiBearerAuth()
@@ -163,10 +169,34 @@ export class UserController {
     });
   }
 
+  @ApiBearerAuth()
+  @ApiOperation({ summary: "Get user's shops" })
+  @ApiSuccessResponseDec(Shop)
+  @ApiUnauthorizedResponse({
+    description: 'Authentication is required',
+    type: ExceptionResponse,
+  })
   @Get('me/shops')
   async shops(@CurrentUser() user: User): Promise<ISuccessResponse<Shop[]>> {
     return {
       data: await this.shopService.findByUser(user.id),
+    };
+  }
+
+  @ApiBearerAuth()
+  @ApiOperation({ summary: "Get user's orders" })
+  @ApiSuccessResponseDec(OrderParticular)
+  @ApiUnauthorizedResponse({
+    description: 'Authentication is required',
+    type: ExceptionResponse,
+  })
+  @Get('me/orders')
+  async orders(
+    @Query() query: OrderQueryDto,
+    @CurrentUser() user: User,
+  ): Promise<ISuccessResponse<PaginatedResult<OrderParticular>>> {
+    return {
+      data: await this.orderService.findAllByUser(user.id, query),
     };
   }
 }

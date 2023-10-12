@@ -13,6 +13,7 @@ import { Wishlist } from '../../wishlist/entities/wishlist.entity';
 import { Expose } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
 import { Cart } from '../../cart/entities/cart.entity';
+import { Order } from '../../order/entities/order.entity';
 
 @Entity()
 export class User {
@@ -49,6 +50,9 @@ export class User {
 
   @OneToMany(() => Cart, (cart) => cart.user)
   cart: Cart[];
+
+  @OneToMany(() => Order, (order) => order.user)
+  orders: Order[];
 
   @ApiProperty()
   @Expose()

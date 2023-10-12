@@ -9,6 +9,8 @@ import { VoucherType } from '../voucher-type/entities/voucher-type.entity';
 import { Voucher } from '../voucher/entities/voucher.entity';
 import { Wishlist } from '../wishlist/entities/wishlist.entity';
 import { Cart } from '../cart/entities/cart.entity';
+import { Order } from '../order/entities/order.entity';
+import { OrderParticular } from '../order/entities/order-particular.entity';
 
 export default registerAs(
   'orm.config',
@@ -29,6 +31,8 @@ export default registerAs(
       Product,
       Wishlist,
       Cart,
+      Order,
+      OrderParticular,
     ],
     ssl: true,
     synchronize: false,

@@ -11,6 +11,7 @@ import { ProductModule } from './product/product.module';
 import { WishlistModule } from './wishlist/wishlist.module';
 import { ConfigModule } from '@nestjs/config';
 import { CartModule } from './cart/cart.module';
+import { OrderModule } from './order/order.module';
 import ormConfig from './config/orm.config';
 import ormConfigProd from './config/orm.config.prod';
 
@@ -37,6 +38,7 @@ import ormConfigProd from './config/orm.config.prod';
     ProductModule,
     WishlistModule,
     CartModule,
+    OrderModule,
   ],
 })
 export class AppModule {}
