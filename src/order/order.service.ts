@@ -69,6 +69,7 @@ export class OrderService {
     const qb = this.orderParticularRepository
       .createQueryBuilder('p')
       .innerJoin('p.order', 'o')
+      .innerJoinAndSelect('p.product', 'product')
       .where('o.userId = :userId', { userId });
 
     return await paginate(qb, page, pageSize);
