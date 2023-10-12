@@ -36,6 +36,8 @@ export class CartService {
 
     qb.where('c.userId = :userId', { userId });
 
+    qb.innerJoinAndSelect('c.product', 'product');
+
     return await paginate(qb, page, pageSize);
   }
 
