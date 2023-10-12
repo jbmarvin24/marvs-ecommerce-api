@@ -94,22 +94,35 @@ export class OrderService {
   }
 
   async findOneOrThrow(id: number) {
-    const category = await this.orderRepository.findOneBy({
+    const order = await this.orderRepository.findOneBy({
       id,
     });
 
-    if (!category) throw new NotFoundException('Order not found.');
+    if (!order) throw new NotFoundException('Order not found.');
 
-    return category;
+    return order;
   }
 
   async findOneOrThrowOrderParticular(id: number) {
-    const category = await this.orderParticularRepository.findOneBy({
+    const orderParticular = await this.orderParticularRepository.findOneBy({
       id,
     });
 
-    if (!category) throw new NotFoundException('Order particular not found.');
+    if (!orderParticular)
+      throw new NotFoundException('Order particular not found.');
 
-    return category;
+    return orderParticular;
+  }
+
+  async paymentConfirmed(paymentSessionId: string) {
+    const order = await this.orderRepository.findOneBy({
+      paymentSessionId,
+    });
+
+    if (!order) throw new NotFoundException('Order payment session not found.');
+
+    order.orderStatus = OrderStatus.Paid;
+
+    await this.orderRepository.save(order);
   }
 }
