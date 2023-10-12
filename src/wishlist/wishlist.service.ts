@@ -34,6 +34,8 @@ export class WishlistService {
 
     qb.where('w.userId = :userId', { userId });
 
+    qb.innerJoinAndSelect('w.product', 'product');
+
     return await paginate(qb, page, pageSize);
   }
 
