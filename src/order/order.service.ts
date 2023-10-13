@@ -7,6 +7,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { ProductService } from '../product/product.service';
 import { OrderQueryDto } from './dto/order-query.dto';
 import { paginate } from '../lib/pagination/paginator.lib';
+import { OrderItem, PaymentService } from '../payment/payment.service';
 
 @Injectable()
 export class OrderService {
@@ -16,13 +17,10 @@ export class OrderService {
     @InjectRepository(OrderParticular)
     private readonly orderParticularRepository: Repository<OrderParticular>,
     private readonly productService: ProductService,
+    private readonly paymentService: PaymentService,
   ) {}
 
-  async create(
-    createOrderDto: CreateOrderDto,
-    userId: number,
-    paymentSessionId: string,
-  ) {
+  async create(createOrderDto: CreateOrderDto, userId: number) {
     // Create Order Particulars
     const orderParticulars: OrderParticular[] = [];
     for (const particular of createOrderDto.items) {
@@ -36,6 +34,7 @@ export class OrderService {
           quantity: particular.quantity,
           unitPrice: product.price,
           status: OrderStatus.ToPay,
+          product,
         }),
       );
     }
@@ -49,8 +48,6 @@ export class OrderService {
       userId,
       orderStatus: OrderStatus.ToPay,
       totalAmount,
-      paymentIntentId: null,
-      paymentSessionId,
     });
 
     const createdOrder = await this.orderRepository.save(order);
@@ -60,7 +57,24 @@ export class OrderService {
       await this.orderParticularRepository.save(part);
     }
 
-    return createdOrder;
+    // Create payment
+    const session = await this.paymentService.createCheckoutPayment(
+      createOrderDto.successUrl + `?id=${createdOrder.id}`,
+      createOrderDto.cancelUrl,
+      [
+        ...orderParticulars.map<OrderItem>((p) => ({
+          name: p.product.name,
+          description: p.product.description,
+          quantity: p.quantity,
+          unitAmount: p.product.price,
+        })),
+      ],
+    );
+
+    return {
+      createdOrder,
+      paymentUrl: session.paymentUrl,
+    };
   }
 
   async findAllByUser(userId: number, q: OrderQueryDto) {

@@ -44,8 +44,8 @@ export class Order {
   @Column()
   orderStatus: string;
 
-  @Column()
-  paymentSessionId: string;
+  @Column({ nullable: true })
+  paymentSessionId: string | null;
 
   @Column({ nullable: true })
   paymentIntentId: string | null;
