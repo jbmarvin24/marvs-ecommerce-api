@@ -26,7 +26,7 @@ import { ApiSuccessResponseDec } from '../decorators/success-response.decorator'
 import { UpdateOrderParticularDto } from './dto/update-order-particular.dto';
 import { CreateOrderResponseDto } from './dto/create-order.response.dto';
 
-@ApiTags('Order')
+@ApiTags('Orders')
 @Controller('order')
 export class OrderController {
   constructor(private readonly orderService: OrderService) {}

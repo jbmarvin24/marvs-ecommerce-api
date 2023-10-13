@@ -39,6 +39,7 @@ Some useful links:
     .addTag('User', 'Manage users🤵')
     .addTag('Profile', "Manage user's profile📃")
     .addTag('Wishlist', "User's wishlist🚀")
+    .addTag('Orders', 'Manage orders🚗. This uses Stripe for payments.')
     .addTag('Voucher Type', 'Manage different types of vouchers')
     .build();
   const document = SwaggerModule.createDocument(app, config);
