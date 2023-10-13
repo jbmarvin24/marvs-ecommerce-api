@@ -5,6 +5,7 @@ import {
   Param,
   ParseIntPipe,
   Put,
+  Get,
 } from '@nestjs/common';
 import { OrderService } from './order.service';
 import { CreateOrderDto } from './dto/create-order.dto';
@@ -87,6 +88,37 @@ export class OrderController {
     );
     return {
       message: 'Successfully updated.',
+    };
+  }
+
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Confirm payment transaction' })
+  @ApiSuccessResponseDec()
+  @ApiBadRequestResponse({
+    description: 'Invalid inputs',
+    type: ExceptionResponse,
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Authentication is required',
+    type: ExceptionResponse,
+  })
+  @ApiForbiddenResponse({
+    description: 'You dont have access to different orders.',
+    type: ExceptionResponse,
+  })
+  @ApiParam({ name: 'id', description: 'Order Id', example: 1 })
+  @Get('confirm-payment/:id')
+  async confirmOrderPayment(
+    @Param('id', ParseIntPipe) id: number,
+    @CurrentUser() user: User,
+  ): Promise<ISuccessResponse<any>> {
+    const isPaid = await this.orderService.confirmOrderPayment(id, user.id);
+
+    return {
+      success: isPaid,
+      message: isPaid
+        ? 'Payment Successfully Confirmed!'
+        : 'Payment is not confirmed.',
     };
   }
 }

@@ -10,16 +10,20 @@ export interface OrderItem {
 
 @Injectable()
 export class PaymentService {
+  private stripe: Stripe;
+
+  constructor() {
+    this.stripe = new Stripe(process.env.STRIPE_SECRET, {
+      apiVersion: '2023-08-16',
+    });
+  }
+
   async createCheckoutPayment(
     successUrl: string,
     cancelUrl: string,
     orderItems: OrderItem[],
   ) {
-    const stripe = new Stripe(process.env.STRIPE_SECRET, {
-      apiVersion: '2023-08-16',
-    });
-
-    const session = await stripe.checkout.sessions.create({
+    const session = await this.stripe.checkout.sessions.create({
       success_url: successUrl,
       cancel_url: cancelUrl,
       mode: 'payment',
@@ -44,5 +48,11 @@ export class PaymentService {
       id: session.id,
       paymentUrl: session.url,
     };
+  }
+
+  async confirmPayment(sessionId: string) {
+    const session = await this.stripe.checkout.sessions.retrieve(sessionId);
+
+    return session.payment_status === 'paid';
   }
 }

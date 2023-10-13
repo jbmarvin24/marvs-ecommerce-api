@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { OrderParticular } from './entities/order-particular.entity';
 import { Repository } from 'typeorm';
@@ -71,6 +75,11 @@ export class OrderService {
       ],
     );
 
+    // Update the order with the session id;
+    const updatedOrder = new Order({ ...createdOrder });
+    updatedOrder.paymentSessionId = session.id;
+    await this.orderRepository.save(updatedOrder);
+
     return {
       createdOrder,
       paymentUrl: session.paymentUrl,
@@ -129,15 +138,27 @@ export class OrderService {
     return orderParticular;
   }
 
-  async paymentConfirmed(paymentSessionId: string) {
+  async confirmOrderPayment(orderId: number, userId: number) {
     const order = await this.orderRepository.findOneBy({
-      paymentSessionId,
+      id: orderId,
     });
 
     if (!order) throw new NotFoundException('Order payment session not found.');
 
-    order.orderStatus = OrderStatus.Paid;
+    // validate order ownership
+    if (order.userId !== userId)
+      throw new ForbiddenException('You dont have access to this data.');
 
-    await this.orderRepository.save(order);
+    const isPaid = await this.paymentService.confirmPayment(
+      order.paymentSessionId,
+    );
+
+    if (isPaid) {
+      order.orderStatus = OrderStatus.Paid;
+
+      await this.orderRepository.save(order);
+    }
+
+    return isPaid;
   }
 }
