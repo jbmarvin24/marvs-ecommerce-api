@@ -42,7 +42,7 @@ export class TransformResponseInterceptor<T>
     return next.handle().pipe(
       map(({ message, data, success }) => ({
         statusCode: context.switchToHttp().getResponse().statusCode,
-        success: success === undefined,
+        success: success === undefined ? true : success,
         message,
         data,
       })),
