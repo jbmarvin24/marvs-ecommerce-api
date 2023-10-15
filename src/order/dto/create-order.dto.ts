@@ -7,7 +7,7 @@ export class CreateOrderDto {
   @ApiProperty({
     description: 'Order items',
     required: true,
-    type: CreateOrderParticularDto,
+    type: [CreateOrderParticularDto],
   })
   @ValidateNested()
   @IsNotEmpty()
