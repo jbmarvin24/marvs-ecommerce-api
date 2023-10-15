@@ -185,7 +185,7 @@ export class UserController {
 
   @ApiBearerAuth()
   @ApiOperation({ summary: "Get user's orders" })
-  @ApiSuccessResponseDec(OrderParticular)
+  @ApiPaginatedResponseDec(OrderParticular)
   @ApiUnauthorizedResponse({
     description: 'Authentication is required',
     type: ExceptionResponse,
