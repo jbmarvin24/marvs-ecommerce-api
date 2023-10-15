@@ -25,9 +25,13 @@ export class ShopService {
   }
 
   async findAllPaginated(q: ShopQueryDto) {
-    const { pageSize, page, name } = q;
+    const { pageSize, page, name, userId } = q;
 
     const qb = this.shopRepository.createQueryBuilder('s');
+
+    if (userId) {
+      qb.andWhere('s.userId = :userId', { userId });
+    }
 
     if (name)
       qb.andWhere('LOWER(s.name) LIKE :name', {

@@ -38,6 +38,7 @@ import { OrderQueryDto } from '../order/dto/order-query.dto';
 import { Order } from '../order/entities/order.entity';
 import { PaginatedResult } from '../lib/pagination/paginator.lib';
 import { OrderParticular } from '../order/entities/order-particular.entity';
+import { ShopQueryDto } from '../shop/dto/shop-query.dto';
 
 @ApiTags('User')
 @Controller('user')
@@ -171,15 +172,20 @@ export class UserController {
 
   @ApiBearerAuth()
   @ApiOperation({ summary: "Get user's shops" })
-  @ApiSuccessResponseDec(Shop)
+  @ApiPaginatedResponseDec(Shop)
   @ApiUnauthorizedResponse({
     description: 'Authentication is required',
     type: ExceptionResponse,
   })
   @Get('me/shops')
-  async shops(@CurrentUser() user: User): Promise<ISuccessResponse<Shop[]>> {
+  async shops(
+    @Query() query: ShopQueryDto,
+    @CurrentUser() user: User,
+  ): Promise<ISuccessResponse<PaginatedResult<Shop>>> {
+    query.userId = user.id;
+
     return {
-      data: await this.shopService.findByUser(user.id),
+      data: await this.shopService.findAllPaginated(query),
     };
   }
 
