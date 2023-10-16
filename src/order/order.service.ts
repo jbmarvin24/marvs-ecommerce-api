@@ -54,36 +54,39 @@ export class OrderService {
       totalAmount,
     });
 
-    const createdOrder = await this.orderRepository.save(order);
+    const transactionResult = await this.orderRepository.manager.transaction(
+      async (manager) => {
+        const createdOrder = await manager.save(order);
 
-    for (const part of orderParticulars) {
-      part.order = createdOrder;
-      await this.orderParticularRepository.save(part);
-    }
+        for (const part of orderParticulars) {
+          part.order = createdOrder;
+          await manager.save(part);
+        }
 
-    // Create payment
-    const session = await this.paymentService.createCheckoutPayment(
-      createOrderDto.successUrl + `?id=${createdOrder.id}`,
-      createOrderDto.cancelUrl,
-      [
-        ...orderParticulars.map<OrderItem>((p) => ({
-          name: p.product.name,
-          description: p.product.description,
-          quantity: p.quantity,
-          unitAmount: p.product.price,
-        })),
-      ],
+        // Create payment
+        const session = await this.paymentService.createCheckoutPayment(
+          createOrderDto.successUrl + `?id=${createdOrder.id}`,
+          createOrderDto.cancelUrl,
+          [
+            ...orderParticulars.map<OrderItem>((p) => ({
+              name: p.product.name,
+              description: p.product.description,
+              quantity: p.quantity,
+              unitAmount: p.product.price,
+            })),
+          ],
+        );
+
+        // Update the order with the session id;
+        const updatedOrder = new Order({ ...createdOrder });
+        updatedOrder.paymentSessionId = session.id;
+        await manager.save(updatedOrder);
+
+        return { createdOrder, paymentUrl: session.paymentUrl };
+      },
     );
 
-    // Update the order with the session id;
-    const updatedOrder = new Order({ ...createdOrder });
-    updatedOrder.paymentSessionId = session.id;
-    await this.orderRepository.save(updatedOrder);
-
-    return {
-      createdOrder,
-      paymentUrl: session.paymentUrl,
-    };
+    return transactionResult;
   }
 
   async findAllByUser(userId: number, q: OrderQueryDto) {
