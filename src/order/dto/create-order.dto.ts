@@ -19,7 +19,7 @@ export class CreateOrderDto {
     required: true,
     example: 'https://yourapp.com/payment-confirmed',
   })
-  @IsUrl()
+  @IsUrl({ require_tld: false })
   @IsNotEmpty()
   successUrl: string;
 
@@ -28,7 +28,7 @@ export class CreateOrderDto {
     required: true,
     example: 'https://yourapp.com/payment-cancelled',
   })
-  @IsUrl()
+  @IsUrl({ require_tld: false })
   @IsNotEmpty()
   cancelUrl: string;
 }
