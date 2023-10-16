@@ -36,7 +36,7 @@ export class PaymentService {
                 name,
                 description,
               },
-              unit_amount: unitAmount * 100,
+              unit_amount_decimal: (unitAmount * 100).toFixed(2),
             },
             quantity,
           }),
