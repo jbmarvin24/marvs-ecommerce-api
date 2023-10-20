@@ -1,3 +1,4 @@
+import { BadRequestException } from '@nestjs/common';
 import { ApiProperty } from '@nestjs/swagger';
 import { SelectQueryBuilder } from 'typeorm';
 
@@ -20,6 +21,12 @@ export async function paginate<T>(
   pageSize = 10,
 ): Promise<PaginatedResult<T>> {
   const count = await qb.getCount();
+
+  if (pageSize > 20) {
+    throw new BadRequestException(
+      'Page size must be less than or equal to 20.',
+    );
+  }
 
   const results = await qb
     .limit(pageSize)
