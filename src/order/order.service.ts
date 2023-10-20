@@ -142,8 +142,13 @@ export class OrderService {
   }
 
   async confirmOrderPayment(orderId: number, userId: number) {
-    const order = await this.orderRepository.findOneBy({
-      id: orderId,
+    const order = await this.orderRepository.findOne({
+      where: {
+        id: orderId,
+      },
+      relations: {
+        orderParticulars: true,
+      },
     });
 
     if (!order) throw new NotFoundException('Order payment session not found.');
@@ -160,6 +165,12 @@ export class OrderService {
       order.orderStatus = OrderStatus.Paid;
 
       await this.orderRepository.save(order);
+
+      for (const part of order.orderParticulars) {
+        part.status = OrderStatus.Paid;
+
+        await this.orderParticularRepository.save(part);
+      }
     }
 
     return isPaid;
